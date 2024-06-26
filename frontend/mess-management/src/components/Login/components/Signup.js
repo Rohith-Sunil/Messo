@@ -14,14 +14,35 @@ export default function Signup() {
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(signupState);
-    createAccount();
-  };
 
+    try {
+      let response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupState),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      let result = await response.json();
+      console.log(result);
+
+      // Optionally, you can call createAccount or handle the result further here
+      // createAccount();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   //handle Signup API Integration here
-  const createAccount = () => {};
+  // const createAccount = () => {};
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

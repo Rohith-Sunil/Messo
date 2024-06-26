@@ -11,6 +11,12 @@ import { BsPersonCheck } from "react-icons/bs";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
   {
+    key: "admindashboard",
+    label: "Admin Dashboard",
+    path: "/admin",
+    icon: <HiOutlineViewGrid />,
+  },
+  {
     key: "dashboard",
     label: "Dashboard",
     path: "/",

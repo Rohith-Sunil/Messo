@@ -4,19 +4,47 @@ import FormAction from "./FormAction";
 import FormExtra from "./FormExtra";
 import Input from "./Input";
 
+import { useNavigate } from "react-router-dom";
 const fields = loginFields;
 let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Login() {
   const [loginState, setLoginState] = useState(fieldsState);
+  const navigate = useNavigate();
+  const loginHandler = () => {
+    navigate("/");
+  };
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      let response = await fetch("http://localhost:5000/login", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginState),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      let result = await response.json();
+      console.log(result);
+
+      // Optionally, you can call createAccount or handle the result further here
+      // createAccount();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    loginHandler();
     authenticateUser();
   };
 

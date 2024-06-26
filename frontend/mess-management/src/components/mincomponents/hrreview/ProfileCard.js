@@ -1,7 +1,45 @@
 import React, { useState } from "react";
 
-function ReviewDialog({ isOpen, onClose, hrName }) {
+function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
   if (!isOpen) return null;
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const formData = {
+      name: hrName,
+      email: email,
+      hostel_name: hostelName,
+      review: message,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/createReview",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // Sending data as an array
+        }
+      );
+
+      if (response.ok) {
+        console.log("Review submitted successfully");
+        // Optionally, handle successful submission (e.g., show a success message, close the dialog, etc.)
+        onClose();
+      } else {
+        console.error("Failed to submit review");
+        // Optionally, handle submission failure
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -20,7 +58,7 @@ function ReviewDialog({ isOpen, onClose, hrName }) {
         <p className="text-gray-400 mb-6">
           Let us know your feedback about the HR.
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-400">
               Your email
@@ -30,6 +68,8 @@ function ReviewDialog({ isOpen, onClose, hrName }) {
               id="email"
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
               placeholder="name@iiitm.ac.in"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -41,6 +81,8 @@ function ReviewDialog({ isOpen, onClose, hrName }) {
               rows="10"
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
               placeholder="Leave a comment..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             ></textarea>
           </div>
           <button
@@ -55,7 +97,7 @@ function ReviewDialog({ isOpen, onClose, hrName }) {
   );
 }
 
-export default function ProfileCard({ name, url }) {
+export default function ProfileCard({ name, url, hostelName }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedHrName, setSelectedHrName] = useState("");
 
@@ -99,6 +141,7 @@ export default function ProfileCard({ name, url }) {
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
         hrName={selectedHrName}
+        hostelName={hostelName}
       />
     </div>
   );

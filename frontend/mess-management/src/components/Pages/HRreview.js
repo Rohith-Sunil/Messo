@@ -11,26 +11,32 @@ export default function HRreview() {
         <ProfileCard
           name="Suyash"
           url="https://randomuser.me/api/portraits/men/1.jpg"
+          hostelName="BH-3"
         />
         <ProfileCard
           name="Hari"
           url="https://randomuser.me/api/portraits/men/7.jpg"
+          hostelName="BH-3"
         />
         <ProfileCard
           name="Kavin"
           url="https://randomuser.me/api/portraits/men/9.jpg"
+          hostelName="BH-3"
         />
         <ProfileCard
           name="Varun"
           url="https://randomuser.me/api/portraits/men/10.jpg"
+          hostelName="BH-3"
         />
         <ProfileCard
           name="Rahul"
           url="https://randomuser.me/api/portraits/men/18.jpg"
+          hostelName="BH-3"
         />
         <ProfileCard
           name="Harsh"
           url="https://randomuser.me/api/portraits/men/44.jpg"
+          hostelName="BH-3"
         />
       </div>
     </div>

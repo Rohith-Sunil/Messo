@@ -6,6 +6,9 @@ export default function MenuGrid() {
   const [showModal, setShowModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState(null);
 
+  const [meal_type, setMealType] = useState(null);
+  const [day, setDay] = useState(null);
+
   const weekdays = [
     "Monday",
     "Tuesday",
@@ -18,9 +21,40 @@ export default function MenuGrid() {
 
   const mealTypes = ["Breakfast", "Lunch", "Snacks", "Dinner"];
 
-  const handleRateClick = (rating) => {
-    setSelectedRating(rating);
+  async function handleFinalSubmit() {
+    const hostelName = "BH-3";
+    const formData = {
+      hostel_name: hostelName,
+      day: day,
+      meal_type: meal_type,
+      rating: selectedRating,
+    };
+    console.log(formData);
+    try {
+      const response = await fetch("http://localhost:5000/api/v1/menuReview", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), // Sending data as an array
+      });
+
+      if (response.ok) {
+        console.log("Rating submitted successfully");
+        // Optionally, handle successful submission (e.g., show a success message, close the dialog, etc.)
+      } else {
+        console.error("Failed to submit rating");
+        // Optionally, handle submission failure
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  const handleRateClick = (day, meal) => {
     setShowModal(true);
+    setMealType(meal);
+    setDay(day);
   };
 
   return (
@@ -67,7 +101,7 @@ export default function MenuGrid() {
                         <div className="flex items-center justify-center">
                           <button
                             className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105 text-neutral-100"
-                            onClick={() => handleRateClick(id)}
+                            onClick={() => handleRateClick(day, meal)}
                           >
                             Rate
                           </button>
@@ -121,7 +155,7 @@ export default function MenuGrid() {
               <button
                 className="px-6 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-colors"
                 onClick={() => {
-                  // Handle submitting the rating
+                  handleFinalSubmit();
                   setShowModal(false);
                 }}
               >

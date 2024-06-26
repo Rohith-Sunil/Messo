@@ -8,6 +8,7 @@ import Announcement from "./components/Pages/Announcement";
 import LoginPage from "./components/Login/pages/Login";
 import SignupPage from "./components/Login/pages/Signup";
 import HRreview from "./components/Pages/HRreview";
+import AdminDashboard from "./components/Pages/AdminDashboard";
 
 function App() {
   return (
@@ -18,7 +19,11 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/complaints" element={<Complaints />} />
           {/* <Route path="/Suggestions" element={<Suggestions />} /> */}
-          <Route path="/announcement" element={<Announcement />} />
+          <Route
+            path="/announcement"
+            element={<Announcement isAdmin={true} />}
+          />
+          <Route path="/Admin" element={<AdminDashboard />} />
           <Route path="/hrReview" element={<HRreview />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />

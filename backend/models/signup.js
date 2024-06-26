@@ -22,12 +22,22 @@ const signupSchema = new Schema({
     type: String,
     required: [true, "Confirm Password is required"],
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+    required: [true, "isAdmin is required"],
+  },
 });
 signupSchema.statics.findAndValidate = async function (email, password) {
-  const foundUser = await this.findOne({ email });
-  const isValid = await bcrypt.compare(password, foundUser.password);
+  try {
+    const foundUser = await this.findOne({ email });
+    if (!foundUser) return false;
+    const isValid = await bcrypt.compare(password, foundUser.password);
 
-  return isValid ? foundUser : false;
+    return isValid ? foundUser : false;
+  } catch (e) {
+    return e;
+  }
 };
 
 signupSchema.pre("save", async function (next) {
