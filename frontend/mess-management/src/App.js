@@ -9,11 +9,13 @@ import LoginPage from "./components/Login/pages/Login";
 import SignupPage from "./components/Login/pages/Signup";
 import HRreview from "./components/Pages/HRreview";
 import AdminDashboard from "./components/Pages/AdminDashboard";
+import LandingPage from "./components/Pages/LandingPage";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/Home" element={<LandingPage />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="/menu" element={<Menu />} />

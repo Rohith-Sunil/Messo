@@ -13,31 +13,28 @@ const weekdays = [
 const mealTypes = ["Breakfast", "Lunch", "Snacks", "Dinner"];
 
 export default function AdminDashboard() {
-  const [reviews, setReviews] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [complaints, setComplaints] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [subject, setSubject] = useState("");
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // const reviewsResponse = await fetch(
-        //   "http://localhost:5000/api/v1/hrReviews"
-        // );
-        // const reviewsData = await reviewsResponse.json();
-        // setReviews(reviewsData);
-
+        // Fetch ratings data
         const ratingsResponse = await fetch(
           "http://localhost:5000/api/v1/ratingByDayAndMealType"
         );
         const ratingsData = await ratingsResponse.json();
         setRatings(ratingsData);
-        console.log(ratingsData);
 
-        // const complaintsResponse = await fetch(
-        //   "http://localhost:5000/api/v1/complaints"
-        // );
-        // const complaintsData = await complaintsResponse.json();
-        // setComplaints(complaintsData);
+        // Fetch complaints data
+        const complaintsResponse = await fetch(
+          "http://localhost:5000/api/v1/getComplaints"
+        );
+        const complaintsData = await complaintsResponse.json();
+        setComplaints(complaintsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -54,6 +51,33 @@ export default function AdminDashboard() {
     return rating ? rating.averageRating.toFixed(2) : "No data";
   };
 
+  const handleSendAnnouncement = async () => {
+    // Add logic to handle sending announcement
+    console.log("Subject:", subject);
+    console.log("Content:", content);
+
+    try {
+      let response = await fetch("http://localhost:5000/createAnnouncement", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ subject, content }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      let result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="bg-neutral-100 w-full text-black min-h-screen text-center md:text-left overflow-auto">
       <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full">
@@ -61,34 +85,6 @@ export default function AdminDashboard() {
           <p className="text-4xl font-bold inline border-b-4 border-gray-500">
             Admin Dashboard
           </p>
-        </div>
-
-        <div className="pb-8 mt-4">
-          <h2 className="text-2xl font-semibold">HR Reviews</h2>
-          <div className="mt-4">
-            {reviews.length > 0 ? (
-              <table className="min-w-full bg-white dark:bg-neutral-900 shadow-md rounded-lg">
-                <thead className="bg-teal-600 text-white">
-                  <tr>
-                    <th className="py-2 px-4 border-b">HR Name</th>
-                    <th className="py-2 px-4 border-b">Email</th>
-                    <th className="py-2 px-4 border-b">Review</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reviews.map((review) => (
-                    <tr key={review.id} className="hover:bg-teal-100">
-                      <td className="py-2 px-4 border-b">{review.hrName}</td>
-                      <td className="py-2 px-4 border-b">{review.email}</td>
-                      <td className="py-2 px-4 border-b">{review.review}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p>No HR reviews available.</p>
-            )}
-          </div>
         </div>
 
         <div className="pb-8 mt-4">
@@ -122,36 +118,91 @@ export default function AdminDashboard() {
         </div>
 
         <div className="pb-8 mt-4">
-          <h2 className="text-2xl font-semibold">Complaints</h2>
+          <h2 className="text-2xl font-semibold">Complaints & Suggestions</h2>
           <div className="mt-4">
             {complaints.length > 0 ? (
-              <table className="min-w-full bg-white dark:bg-neutral-900 shadow-md rounded-lg">
-                <thead className="bg-teal-600 text-white">
-                  <tr>
-                    <th className="py-2 px-4 border-b">Student Name</th>
-                    <th className="py-2 px-4 border-b">Email</th>
-                    <th className="py-2 px-4 border-b">Complaint</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {complaints.map((complaint) => (
-                    <tr key={complaint.id} className="hover:bg-teal-100">
-                      <td className="py-2 px-4 border-b">
-                        {complaint.studentName}
-                      </td>
-                      <td className="py-2 px-4 border-b">{complaint.email}</td>
-                      <td className="py-2 px-4 border-b">
-                        {complaint.message}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              complaints.map((complaint) => (
+                <div
+                  key={complaint.id}
+                  className="mb-6 p-4 border rounded-lg shadow-md bg-white"
+                >
+                  <h2 className="text-xl font-semibold mb-2">
+                    {complaint.subject}
+                  </h2>
+                  <p className="mb-2">{complaint.message}</p>
+                  <p className="text-sm text-gray-500">
+                    <strong>Email:</strong> {complaint.email}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    <strong>Message Type:</strong> {complaint.messageType}
+                  </p>
+                </div>
+              ))
             ) : (
               <p>No complaints available.</p>
             )}
           </div>
         </div>
+
+        {/* Send Announcement Button */}
+        <div className="flex justify-center mt-4">
+          <button
+            className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mb-4"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            Send Announcement
+          </button>
+        </div>
+
+        {/* Announcement Dialog */}
+        {isDialogOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28">
+              <button
+                onClick={() => setIsDialogOpen(false)}
+                className="absolute top-3 right-3 text-white text-3xl font-bold focus:outline-none"
+              >
+                &times;
+              </button>
+              <h2 className="text-3xl font-bold text-white mb-6">
+                Send Announcement
+              </h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendAnnouncement();
+                }}
+              >
+                <div className="mb-4">
+                  <label className="block text-gray-400">Subject</label>
+                  <input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                    placeholder="Enter subject"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-400">Announcement</label>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows="10"
+                    className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Enter announcement"
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full p-3 bg-teal-600 text-white rounded hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

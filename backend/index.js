@@ -18,6 +18,7 @@ const flash = require("connect-flash");
 const HR_route = require("./my-routes/HR_route");
 const menus = require("./my-routes/menus");
 const announce_route = require("./my-routes/announce_route");
+const complaints_route = require("./my-routes/complaint_route");
 mongoose
   .connect("mongodb+srv://messo:1234@messo.gmb5mku.mongodb.net/", {
     useNewUrlParser: true,
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/api/v1", HR_route);
+app.use("/api/v1", complaints_route);
 app.use("/api/v1", menus);
 app.use("/api/v1", announce_route);
 const requireLogin = (req, res, next) => {
@@ -44,30 +46,34 @@ const requireLogin = (req, res, next) => {
   }
   next();
 };
-app.get("/", (req, res) => {
-  res.send("Home page");
-  console.log("Welcome to home page");
-});
+
+// app.get("/", (req, res) => {
+//   res.send("Home page");
+//   console.log("Welcome to home page");
+// });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const foundUser = await newUser.findAndValidate(email, password);
-  if (!foundUser) {
-    res.redirect("/login");
-  }
+  // if (!foundUser) {
+  //   res.redirect("/login");
+  // }
 
   console.log(foundUser);
   if (foundUser) {
     req.flash("info", "Login successful");
     console.log("Login successful");
-    // Removed res.json("Login successful");
+    // res.json("exist");
+    // res.redirect("/");
+    res.json({ status: "exist", message: "Login successful" });
     req.session.user_id = foundUser._id;
-    res.redirect("/");
   } else {
     req.flash("failed", "Login failed");
-    // Removed res.json("User not registered");
-    res.redirect("/register");
+    res.json({ status: "notexist", message: "Login failed" });
+    // res.redirect("/register");
   }
 });
+
 app.post("/register", async (req, res) => {
   //    const user= newUser.create(req.body)
   //     .then(users=>res.join(users))

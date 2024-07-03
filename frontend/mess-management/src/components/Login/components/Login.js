@@ -38,13 +38,16 @@ export default function Login() {
 
       let result = await response.json();
       console.log(result);
-
-      // Optionally, you can call createAccount or handle the result further here
-      // createAccount();
+      if (result.status === "exist") {
+        window.location.href = "/"; // Redirect to home page on successful login
+        localStorage.setItem("status", "exist");
+      } else {
+        window.location.href = "/signup"; // Redirect to register page on failed login
+      }
     } catch (error) {
       console.error("Error:", error);
     }
-    loginHandler();
+    // loginHandler();
     authenticateUser();
   };
 

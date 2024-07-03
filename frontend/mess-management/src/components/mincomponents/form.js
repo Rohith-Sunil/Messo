@@ -1,10 +1,50 @@
 import React, { useState } from "react";
 
 function ContactForm() {
-  const [messageType, setMessageType] = useState("complaint");
+  const [messageType, setMessageType] = useState("Complaint");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+
+  const hostel_name = "BH-3";
 
   const handleTypeChange = (e) => {
     setMessageType(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      email: email,
+      hostel_name: hostel_name,
+      subject: subject,
+      messageType: messageType,
+      message: message,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/sendComplaint",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        // Handle successful response
+        console.log("Message sent successfully");
+      } else {
+        // Handle error response
+        console.error("Failed to send message");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (
@@ -17,7 +57,7 @@ function ContactForm() {
           Have concerns about the hostel mess? Want to provide feedback on meal
           quality or suggest improvements? We're here to help. Let us know.
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-400">
               Your email
@@ -25,6 +65,8 @@ function ContactForm() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
               placeholder="name@iiitm.ac.in"
             />
@@ -36,6 +78,8 @@ function ContactForm() {
             <input
               type="text"
               id="subject"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
               placeholder="Let us know how we can help you"
             />
@@ -49,8 +93,8 @@ function ContactForm() {
                 <input
                   type="radio"
                   name="messageType"
-                  value="complaint"
-                  checked={messageType === "complaint"}
+                  value="Complaint"
+                  checked={messageType === "Complaint"}
                   onChange={handleTypeChange}
                   className="mr-2"
                 />
@@ -60,8 +104,8 @@ function ContactForm() {
                 <input
                   type="radio"
                   name="messageType"
-                  value="suggestion"
-                  checked={messageType === "suggestion"}
+                  value="Suggestion"
+                  checked={messageType === "Suggestion"}
                   onChange={handleTypeChange}
                   className="mr-2"
                 />
@@ -76,20 +120,12 @@ function ContactForm() {
             <textarea
               id="message"
               rows="10"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
               placeholder="Leave a comment..."
             ></textarea>
           </div>
-          {/* <div className="mb-6">
-            <label htmlFor="image" className="block text-gray-400">
-              Upload an image
-            </label>
-            <input
-              type="file"
-              id="image"
-              className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div> */}
           <button
             type="submit"
             className="w-full p-3 bg-teal-600 text-white rounded hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const announcements = [
   {
@@ -44,99 +44,10 @@ const Announcement = () => {
   );
 };
 
-const App = ({ isAdmin }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [content, setContent] = useState("");
-
-  const handleSendAnnouncement = async () => {
-    // Add logic to handle sending announcement
-    console.log("Subject:", subject);
-    console.log("Content:", content);
-
-    try {
-      let response = await fetch("http://localhost:5000//createAnnouncement", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ subject, content }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      let result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-    setIsDialogOpen(false);
-  };
-
+const App = () => {
   return (
     <div>
       <Announcement />
-      {isAdmin && (
-        <div className="flex justify-center mt-4">
-          <button
-            className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mb-4"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Send Announcement
-          </button>
-        </div>
-      )}
-      {isDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28">
-            <button
-              onClick={() => setIsDialogOpen(false)}
-              className="absolute top-3 right-3 text-white text-3xl font-bold focus:outline-none"
-            >
-              &times;
-            </button>
-            <h2 className="text-3xl font-bold text-white mb-6">
-              Send Announcement
-            </h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendAnnouncement();
-              }}
-            >
-              <div className="mb-4">
-                <label className="block text-gray-400">Subject</label>
-                <input
-                  type="text"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                  placeholder="Enter subject"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-400">Announcement</label>
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows="10"
-                  className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="Enter announcement"
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="w-full p-3 bg-teal-600 text-white rounded hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 "
-              >
-                Send
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

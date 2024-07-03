@@ -1,15 +1,31 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
 const Signup = require("./signup");
-const announcementSchema = new Schema({
-  hostel_name: {
+
+const complaintSchema = new mongoose.Schema({
+  email: {
     type: String,
     required: true,
   },
-  complaints: {
+  hostel_name: {
+    type: String,
+    required: [true, "Hostel Name is required"],
+    default: "BH-3",
+  },
+  subject: {
+    type: String,
+    required: true,
+  },
+  messageType: {
+    type: String,
+    enum: ["Complaint", "Suggestion"],
+    required: true,
+  },
+  message: {
     type: String,
     required: true,
   },
 });
-module.exports = mongoose.model("announcement", announcementSchema);
+
+const Complaint = mongoose.model("Complaint", complaintSchema);
+module.exports = Complaint;
