@@ -22,14 +22,12 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch ratings data
         const ratingsResponse = await fetch(
           "http://localhost:5000/api/v1/ratingByDayAndMealType"
         );
         const ratingsData = await ratingsResponse.json();
         setRatings(ratingsData);
 
-        // Fetch complaints data
         const complaintsResponse = await fetch(
           "http://localhost:5000/api/v1/getComplaints"
         );
@@ -43,7 +41,6 @@ export default function AdminDashboard() {
     fetchData();
   }, []);
 
-  // Function to get the rating for a specific day and meal type
   const getRating = (day, mealType) => {
     const rating = ratings.find(
       (r) => r._id.day === day && r._id.meal_type === mealType
@@ -52,10 +49,6 @@ export default function AdminDashboard() {
   };
 
   const handleSendAnnouncement = async () => {
-    // Add logic to handle sending announcement
-    console.log("Subject:", subject);
-    console.log("Content:", content);
-
     try {
       let response = await fetch("http://localhost:5000/createAnnouncement", {
         method: "POST",
@@ -76,6 +69,37 @@ export default function AdminDashboard() {
       console.error("Error:", error);
     }
     setIsDialogOpen(false);
+  };
+
+  const handleDeleteComplaint = async (id) => {
+    try {
+      await fetch(`http://localhost:5000/api/v1/deleteComplaint/${id}`, {
+        method: "DELETE",
+      });
+      setComplaints(complaints.filter((complaint) => complaint._id !== id));
+    } catch (error) {
+      console.error("Error deleting complaint:", error);
+    }
+  };
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      await fetch(`http://localhost:5000/api/v1/updateComplaintStatus/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      setComplaints(
+        complaints.map((complaint) =>
+          complaint._id === id ? { ...complaint, status } : complaint
+        )
+      );
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
   };
 
   return (
@@ -123,7 +147,7 @@ export default function AdminDashboard() {
             {complaints.length > 0 ? (
               complaints.map((complaint) => (
                 <div
-                  key={complaint.id}
+                  key={complaint._id}
                   className="mb-6 p-4 border rounded-lg shadow-md bg-white"
                 >
                   <h2 className="text-xl font-semibold mb-2">
@@ -136,6 +160,29 @@ export default function AdminDashboard() {
                   <p className="text-sm text-gray-500">
                     <strong>Message Type:</strong> {complaint.messageType}
                   </p>
+                  <div className="mt-4">
+                    <label className="mr-2">Status:</label>
+                    <select
+                      value={complaint.status}
+                      onChange={(e) =>
+                        handleStatusChange(complaint._id, e.target.value)
+                      }
+                      className="border rounded p-2"
+                    >
+                      <option value="Pending" className="text-red-500">
+                        Pending
+                      </option>
+                      <option value="Checked" className="text-green-500">
+                        Checked
+                      </option>
+                    </select>
+                    <button
+                      onClick={() => handleDeleteComplaint(complaint._id)}
+                      className="ml-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (

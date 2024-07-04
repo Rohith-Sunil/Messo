@@ -30,4 +30,47 @@ const complaintsController = async (req, res) => {
   res.status(201).json(newComplaint);
 };
 
-module.exports = complaintsController;
+const updateComplaintStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const complaint = await Complaint.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!complaint) {
+      return res.status(404).json({ error: "Complaint not found" });
+    }
+
+    res.json(complaint);
+  } catch (error) {
+    console.error("Error updating complaint status:", error);
+    res.status(500).json({ error: "Error updating complaint status" });
+  }
+};
+
+const deleteComplaint = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const complaint = await Complaint.findByIdAndDelete(id);
+
+    if (!complaint) {
+      return res.status(404).json({ error: "Complaint not found" });
+    }
+
+    res.json({ message: "Complaint deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting complaint:", error);
+    res.status(500).json({ error: "Error deleting complaint" });
+  }
+};
+
+module.exports = {
+  complaintsController,
+  deleteComplaint,
+  updateComplaintStatus,
+};

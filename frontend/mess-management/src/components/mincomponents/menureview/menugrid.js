@@ -157,6 +157,7 @@ export default function MenuGrid() {
                 onClick={() => {
                   handleFinalSubmit();
                   setShowModal(false);
+                  setSelectedRating(null);
                 }}
               >
                 Submit

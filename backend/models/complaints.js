@@ -25,6 +25,11 @@ const complaintSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["Pending", "Completed"],
+    default: "Pending",
+  },
 });
 
 const Complaint = mongoose.model("Complaint", complaintSchema);
