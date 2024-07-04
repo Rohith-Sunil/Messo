@@ -167,14 +167,14 @@ export default function AdminDashboard() {
                       onChange={(e) =>
                         handleStatusChange(complaint._id, e.target.value)
                       }
-                      className="border rounded p-2"
+                      className={`border rounded p-2 ${
+                        complaint.status === "Pending"
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }`}
                     >
-                      <option value="Pending" className="text-red-500">
-                        Pending
-                      </option>
-                      <option value="Checked" className="text-green-500">
-                        Checked
-                      </option>
+                      <option value="Pending">Pending</option>
+                      <option value="Checked">Checked</option>
                     </select>
                     <button
                       onClick={() => handleDeleteComplaint(complaint._id)}
