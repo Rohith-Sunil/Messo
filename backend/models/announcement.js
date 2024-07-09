@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const bcrypt = require("bcrypt");
-const Signup = require("./signup");
+
 const announcementSchema = new Schema({
   hostel_name: {
     type: String,
@@ -16,8 +15,13 @@ const announcementSchema = new Schema({
     required: true,
   },
   isAdmin: {
-    ref: "Signup",
-    type: Schema.Types.ObjectId,
+    type: Boolean,
+    required: true,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
   },
 });
-module.exports = mongoose.model("announcement", announcementSchema);
+
+module.exports = mongoose.model("Announcement", announcementSchema);

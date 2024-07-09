@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const signupSchema = new Schema({
   name: {
     type: String,
@@ -25,9 +27,9 @@ const signupSchema = new Schema({
   isAdmin: {
     type: Boolean,
     default: false,
-    required: [true, "isAdmin is required"],
   },
 });
+
 signupSchema.statics.findAndValidate = async function (email, password) {
   try {
     const foundUser = await this.findOne({ email });
@@ -47,5 +49,11 @@ signupSchema.pre("save", async function (next) {
   next();
 });
 
-const Signup = mongoose.model("signup", signupSchema);
+signupSchema.methods.createJWT = function () {
+  return jwt.sign({ userID: this._id }, "thisisgood", {
+    expiresIn: "10s",
+  });
+};
+
+const Signup = mongoose.model("Signup", signupSchema);
 module.exports = Signup;

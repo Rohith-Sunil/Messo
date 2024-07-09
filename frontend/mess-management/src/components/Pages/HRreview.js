@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfileCard from "../mincomponents/hrreview/ProfileCard";
 
 // Example of fetching HR reviews from backend
@@ -28,6 +28,13 @@ const fetchHRReviews = async (hrname) => {
 
 export default function HRreview() {
   const [selectedHRReviews, setSelectedHRReviews] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // State to track admin status
+
+  useEffect(() => {
+    // Check local storage for admin status on component mount
+    const isAdminLocalStorage = localStorage.getItem("isAdmin");
+    setIsAdmin(isAdminLocalStorage === "true");
+  }, []);
 
   // Dummy data for HRs (replace with actual data from API if needed)
   const hrData = [
@@ -94,23 +101,25 @@ export default function HRreview() {
         </div>
       </div>
 
-      {/* Admin Section */}
-      <div className="pb-8 mt-4">
-        <p className="text-4xl font-bold underline decoration-gray-500 underline-offset-4 text-gray-900 px-2 m-2">
-          Admin Section
-        </p>
-        <div className="grid grid-cols-3 gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
-          {hrData.map((hr) => (
-            <button
-              key={hr.name}
-              onClick={() => handleHRClick(hr.name)}
-              className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none"
-            >
-              {hr.name}
-            </button>
-          ))}
+      {/* Admin Section - Conditionally rendered */}
+      {isAdmin && (
+        <div className="pb-8 mt-4">
+          <p className="text-4xl font-bold underline decoration-gray-500 underline-offset-4 text-gray-900 px-2 m-2">
+            Admin Section
+          </p>
+          <div className="grid grid-cols-3 gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
+            {hrData.map((hr) => (
+              <button
+                key={hr.name}
+                onClick={() => handleHRClick(hr.name)}
+                className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none"
+              >
+                {hr.name}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Reviews Section */}
       {selectedHRReviews && (

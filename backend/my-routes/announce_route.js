@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const announceController = require("../controllers/announce");
-const { getAllAnnouncements } = require("../controllers/getAnnouncement");
+const {
+  announceController,
+  getAllAnnouncements,
+} = require("../controllers/announce");
 
 router.post("/createAnnouncement", announceController);
-router.get("/getAllAnnouncment", getAllAnnouncements);
+router.get("/getAllAnnouncements", getAllAnnouncements);
 
 module.exports = router;

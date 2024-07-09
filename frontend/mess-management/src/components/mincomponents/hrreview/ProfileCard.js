@@ -39,6 +39,8 @@ function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
     } catch (error) {
       console.error("Error:", error);
     }
+    setEmail("");
+    setMessage("");
   }
 
   return (

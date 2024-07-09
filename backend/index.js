@@ -55,32 +55,41 @@ const requireLogin = (req, res, next) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const foundUser = await newUser.findAndValidate(email, password);
-  // if (!foundUser) {
-  //   res.redirect("/login");
-  // }
+  if (!email || !password) {
+    res.json("please provide email and password");
+  }
+  if (!foundUser) res.json("invalid credentials");
 
   console.log(foundUser);
   if (foundUser) {
     req.flash("info", "Login successful");
     console.log("Login successful");
-    // res.json("exist");
-    // res.redirect("/");
-    res.json({ status: "exist", message: "Login successful" });
-    req.session.user_id = foundUser._id;
+
+    const token = foundUser.createJWT();
+    res.json({
+      success: true,
+      message: "loggedin",
+      foundUser: {
+        email: foundUser.email,
+        isAdmin: foundUser.isAdmin,
+      },
+      name: foundUser.name,
+      token,
+    });
+    // res.json({ status: "exist", message: "Login successful" });
+    // req.session.user_id = foundUser._id;
   } else {
-    req.flash("failed", "Login failed");
-    res.json({ status: "notexist", message: "Login failed" });
-    // res.redirect("/register");
+    // req.flash("failed", "Login failed");
+    // res.json({ status: "notexist", message: "Login failed" });
   }
 });
 
 app.post("/register", async (req, res) => {
-  //    const user= newUser.create(req.body)
-  //     .then(users=>res.join(users))
-  //     .catch(err=>res.json(err))
-
-  //     console.log(user.name);
   const { name, hostel_name, email, password, confirm_password } = req.body;
+  const users = await newUser.find({ email });
+  if (users) {
+    console.log("Already registered");
+  }
   const user = new newUser({
     name,
     hostel_name,
@@ -91,9 +100,19 @@ app.post("/register", async (req, res) => {
   console.log(user);
   await user.save();
 
-  req.session.user_id = user._id;
+  const token = user.createJWT();
+  res.status(200).json({
+    success: true,
+    message: "User updated successfully",
+    user: {
+      email: user.email,
+      name: user.name,
+    },
+    token,
+  });
+  // req.session.user_id = user._id;
   console.log("Hey User");
-  res.redirect("/");
+  // res.redirect("/");
 });
 
 app.post("/logout", (req, res, next) => {

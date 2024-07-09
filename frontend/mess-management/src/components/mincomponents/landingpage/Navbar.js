@@ -17,7 +17,7 @@ const Navbar = () => {
         <li className="inline-block">
           <button
             onClick={() => navigate("/login")}
-            className="bg-teal-600 text-white hover:text-gray-200 px-4 py-2 rounded "
+            className="bg-teal-600 text-white hover:text-gray-200 px-auto py-2 rounded "
             style={{ width: "80px", whiteSpace: "nowrap" }}
           >
             Sign In
@@ -26,7 +26,7 @@ const Navbar = () => {
         <li className="inline-block">
           <button
             onClick={() => navigate("/signup")}
-            className="bg-teal-600 text-white hover:text-gray-200 px-4 py-2 rounded text-center"
+            className="bg-teal-600 text-white hover:text-gray-200 px-auto py-2 rounded "
             style={{ width: "80px", whiteSpace: "nowrap" }}
           >
             Sign Up

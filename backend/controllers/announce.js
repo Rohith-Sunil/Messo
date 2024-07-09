@@ -1,13 +1,13 @@
-const announcements = require("../models/announcement");
-const signup = require("../models/signup");
+const Announcements = require("../models/announcement");
 
 const announceController = async (req, res) => {
   const { hostel_name, subject, announcement, isAdmin } = req.body;
+
   if (!hostel_name) {
     return res.status(422).json({ error: "Hostel Name is required" });
   }
   if (!subject) {
-    return res.status(422).json({ error: "Announcement is required" });
+    return res.status(422).json({ error: "Subject is required" });
   }
   if (!announcement) {
     return res.status(422).json({ error: "Announcement is required" });
@@ -15,13 +15,28 @@ const announceController = async (req, res) => {
   if (!isAdmin && isAdmin !== false) {
     return res.status(422).json({ error: "isAdmin is required" });
   }
-  const newAnnounce = new announcements({
-    hostel_name,
-    subject,
-    announcement,
-    isAdmin,
-  });
-  await newAnnounce.save();
-  res.status(201).json(newAnnounce);
+
+  try {
+    const newAnnouncement = new Announcements({
+      hostel_name,
+      subject,
+      announcement,
+      isAdmin,
+    });
+    await newAnnouncement.save();
+    res.status(201).json(newAnnouncement);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
-module.exports = announceController;
+
+const getAllAnnouncements = async (req, res) => {
+  try {
+    const allAnnouncements = await Announcements.find({});
+    res.status(200).json(allAnnouncements);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { announceController, getAllAnnouncements };
