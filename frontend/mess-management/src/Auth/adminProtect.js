@@ -1,9 +1,9 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "./authProvider"; // Update the path as necessary
 
 const AdminProtectedRoute = () => {
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
-  const token = localStorage.getItem("token");
+  const { isAdmin, token } = useAuth();
 
   return isAdmin && token ? <Outlet /> : <Navigate to="/login" />;
 };

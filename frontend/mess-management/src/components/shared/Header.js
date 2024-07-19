@@ -221,7 +221,7 @@ export default function Header() {
         </span>
       </div>
       <div className="flex items-center gap-2 mr-2">
-        <Popover className="relative">
+        {/* <Popover className="relative">
           {({ open }) => (
             <>
               <PopoverButton
@@ -288,7 +288,7 @@ export default function Header() {
               </Transition>
             </>
           )}
-        </Popover>
+        </Popover> */}
         <Menu as="div" className="relative">
           <div>
             <MenuButton className="ml-2 bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-400">
