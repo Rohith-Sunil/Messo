@@ -1,4 +1,5 @@
 // import React, { useState, useEffect } from "react";
+// import { useAuth } from "../../Auth/authProvider";
 
 // const weekdays = [
 //   "Monday",
@@ -9,7 +10,6 @@
 //   "Saturday",
 //   "Sunday",
 // ];
-
 // const mealTypes = ["Breakfast", "Lunch", "Snacks", "Dinner"];
 
 // export default function AdminDashboard() {
@@ -18,18 +18,33 @@
 //   const [isDialogOpen, setIsDialogOpen] = useState(false);
 //   const [subject, setSubject] = useState("");
 //   const [content, setContent] = useState("");
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [itemsPerPage] = useState(5); // Change this value to set the number of items per page
+//   const { token } = useAuth();
 
 //   useEffect(() => {
 //     async function fetchData() {
 //       try {
 //         const ratingsResponse = await fetch(
-//           "http://localhost:5000/api/v1/ratingByDayAndMealType"
+//           "http://localhost:5000/api/v1/ratingByDayAndMealType",
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: `Bearer ${token}`, // Use token for authorized requests
+//             },
+//           }
 //         );
 //         const ratingsData = await ratingsResponse.json();
 //         setRatings(ratingsData);
 
 //         const complaintsResponse = await fetch(
-//           "http://localhost:5000/api/v1/getComplaints"
+//           "http://localhost:5000/api/v1/getComplaints",
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: `Bearer ${token}`, // Use token for authorized requests
+//             },
+//           }
 //         );
 //         const complaintsData = await complaintsResponse.json();
 //         setComplaints(complaintsData);
@@ -39,7 +54,7 @@
 //     }
 
 //     fetchData();
-//   }, []);
+//   }, [token]);
 
 //   const getRating = (day, mealType) => {
 //     const rating = ratings.find(
@@ -48,43 +63,47 @@
 //     return rating ? rating.averageRating.toFixed(2) : "No data";
 //   };
 
-//   const handleSendAnnouncement = async () => {
-//     try {
-//       let hostel_name = "BH-3";
-//       const isAdmin = localStorage.getItem("isAdmin") === "true";
-//       const response = await fetch(
-//         "http://localhost:5000/api/v1/createAnnouncement",
-//         {
-//           method: "POST",
-//           mode: "cors",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//             subject: subject,
-//             announcement: content,
-//             isAdmin: isAdmin,
-//             hostel_name: hostel_name,
-//           }),
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
+// const handleSendAnnouncement = async () => {
+//   try {
+//     let hostel_name = "BH-3";
+//     const isAdmin = localStorage.getItem("isAdmin") === "true";
+//     const response = await fetch(
+//       "http://localhost:5000/api/v1/createAnnouncement",
+//       {
+//         method: "POST",
+//         mode: "cors",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`, // Use token for authorized requests
+//         },
+//         body: JSON.stringify({
+//           subject: subject,
+//           announcement: content,
+//           isAdmin: isAdmin,
+//           hostel_name: hostel_name,
+//         }),
 //       }
+//     );
 
-//       const result = await response.json();
-//       console.log(result);
-//     } catch (error) {
-//       console.error("Error:", error);
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
 //     }
-//     setIsDialogOpen(false);
-//   };
+
+//     const result = await response.json();
+//     console.log(result);
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+//   setIsDialogOpen(false);
+// };
 
 //   const handleDeleteComplaint = async (id) => {
 //     try {
 //       await fetch(`http://localhost:5000/api/v1/deleteComplaint/${id}`, {
 //         method: "DELETE",
+//         headers: {
+//           Authorization: `Bearer ${token}`, // Use token for authorized requests
+//         },
 //       });
 //       setComplaints(complaints.filter((complaint) => complaint._id !== id));
 //     } catch (error) {
@@ -98,6 +117,7 @@
 //         method: "PUT",
 //         headers: {
 //           "Content-Type": "application/json",
+
 //         },
 //         body: JSON.stringify({ status }),
 //       });
@@ -112,9 +132,28 @@
 //     }
 //   };
 
+//   // Calculate pagination variables
+//   const indexOfLastComplaint = currentPage * itemsPerPage;
+//   const indexOfFirstComplaint = indexOfLastComplaint - itemsPerPage;
+//   const currentComplaints = complaints.slice(
+//     indexOfFirstComplaint,
+//     indexOfLastComplaint
+//   );
+//   const totalPages = Math.ceil(complaints.length / itemsPerPage);
+
+//   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
 //   return (
 //     <div className="bg-neutral-100 w-full text-black min-h-screen text-center md:text-left overflow-auto">
-//       <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full">
+//       <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full relative ">
+//         {/* Send Announcement Button */}
+//         <button
+//           className="absolute top-4 right-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mt-4"
+//           onClick={() => setIsDialogOpen(true)}
+//         >
+//           Send Announcement
+//         </button>
+
 //         <div className="pb-8 mt-2">
 //           <p className="text-4xl font-bold inline border-b-4 border-gray-500">
 //             Admin Dashboard
@@ -154,8 +193,8 @@
 //         <div className="pb-8 mt-4">
 //           <h2 className="text-2xl font-semibold">Complaints & Suggestions</h2>
 //           <div className="mt-4">
-//             {complaints.length > 0 ? (
-//               complaints.map((complaint) => (
+//             {currentComplaints.length > 0 ? (
+//               currentComplaints.map((complaint) => (
 //                 <div
 //                   key={complaint._id}
 //                   className="mb-6 p-4 border rounded-lg shadow-md bg-white"
@@ -203,16 +242,23 @@
 //               <p>No complaints available.</p>
 //             )}
 //           </div>
-//         </div>
 
-//         {/* Send Announcement Button */}
-//         <div className="flex justify-center mt-4">
-//           <button
-//             className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mb-4"
-//             onClick={() => setIsDialogOpen(true)}
-//           >
-//             Send Announcement
-//           </button>
+//           {/* Pagination Controls */}
+//           <div className="flex justify-center mt-4">
+//             {Array.from({ length: totalPages }, (_, index) => (
+//               <button
+//                 key={index}
+//                 onClick={() => paginate(index + 1)}
+//                 className={`px-4 py-2 mx-1 rounded ${
+//                   currentPage === index + 1
+//                     ? "bg-teal-600 text-white"
+//                     : "bg-gray-200"
+//                 }`}
+//               >
+//                 {index + 1}
+//               </button>
+//             ))}
+//           </div>
 //         </div>
 
 //         {/* Announcement Dialog */}
@@ -270,6 +316,7 @@
 // }
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../Auth/authProvider";
 
 const weekdays = [
   "Monday",
@@ -289,29 +336,42 @@ export default function AdminDashboard() {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Change this value to set the number of items per page
+  const [itemsPerPage] = useState(5);
+  const { token } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       try {
         const ratingsResponse = await fetch(
-          "http://localhost:5000/api/v1/ratingByDayAndMealType"
+          "http://localhost:5000/api/v1/ratingByDayAndMealType",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const ratingsData = await ratingsResponse.json();
         setRatings(ratingsData);
 
         const complaintsResponse = await fetch(
-          "http://localhost:5000/api/v1/getComplaints"
+          "http://localhost:5000/api/v1/getComplaints",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const complaintsData = await complaintsResponse.json();
-        setComplaints(complaintsData);
+        setComplaints(complaintsData.reverse());
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
 
     fetchData();
-  }, []);
+  }, [token]);
 
   const getRating = (day, mealType) => {
     const rating = ratings.find(
@@ -331,6 +391,7 @@ export default function AdminDashboard() {
           mode: "cors",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Use token for authorized requests
           },
           body: JSON.stringify({
             subject: subject,
@@ -351,13 +412,19 @@ export default function AdminDashboard() {
       console.error("Error:", error);
     }
     setIsDialogOpen(false);
+    setSubject("");
+    setContent("");
   };
-
   const handleDeleteComplaint = async (id) => {
     try {
       await fetch(`http://localhost:5000/api/v1/deleteComplaint/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       setComplaints(complaints.filter((complaint) => complaint._id !== id));
     } catch (error) {
       console.error("Error deleting complaint:", error);
@@ -370,6 +437,7 @@ export default function AdminDashboard() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status }),
       });
@@ -383,13 +451,10 @@ export default function AdminDashboard() {
       console.error("Error updating status:", error);
     }
   };
-
-  // Calculate pagination variables
-  const indexOfLastComplaint = currentPage * itemsPerPage;
-  const indexOfFirstComplaint = indexOfLastComplaint - itemsPerPage;
+  console.log(complaints);
   const currentComplaints = complaints.slice(
-    indexOfFirstComplaint,
-    indexOfLastComplaint
+    currentPage * itemsPerPage - itemsPerPage,
+    currentPage * itemsPerPage
   );
   const totalPages = Math.ceil(complaints.length / itemsPerPage);
 
@@ -397,8 +462,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="bg-neutral-100 w-full text-black min-h-screen text-center md:text-left overflow-auto">
-      <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full relative ">
-        {/* Send Announcement Button */}
+      <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full relative">
         <button
           className="absolute top-4 right-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mt-4"
           onClick={() => setIsDialogOpen(true)}
@@ -455,12 +519,6 @@ export default function AdminDashboard() {
                     {complaint.subject}
                   </h2>
                   <p className="mb-2">{complaint.message}</p>
-                  <p className="text-sm text-gray-500">
-                    <strong>Email:</strong> {complaint.email}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    <strong>Message Type:</strong> {complaint.messageType}
-                  </p>
                   <div className="mt-4">
                     <label className="mr-2">Status:</label>
                     <select
@@ -493,27 +551,24 @@ export default function AdminDashboard() {
             ) : (
               <p>No complaints available.</p>
             )}
-          </div>
-
-          {/* Pagination Controls */}
-          <div className="flex justify-center mt-4">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={`px-4 py-2 mx-1 rounded ${
-                  currentPage === index + 1
-                    ? "bg-teal-600 text-white"
-                    : "bg-gray-200"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
+            <div className="flex justify-center mt-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`px-4 py-2 mx-1 rounded ${
+                    currentPage === index + 1
+                      ? "bg-teal-600 text-white"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Announcement Dialog */}
         {isDialogOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28">

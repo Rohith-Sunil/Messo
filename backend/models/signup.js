@@ -20,11 +20,15 @@ const signupSchema = new Schema({
     type: String,
     required: [true, "Password is required"],
   },
-  confirm_password: {
-    type: String,
-    required: [true, "Confirm Password is required"],
-  },
+  // confirm_password: {
+  //   type: String,
+  //   required: [true, "Confirm Password is required"],
+  // },
   isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  isSuperAdmin: {
     type: Boolean,
     default: false,
   },
@@ -45,15 +49,15 @@ signupSchema.statics.findAndValidate = async function (email, password) {
 signupSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
-  this.confirm_password = await bcrypt.hash(this.confirm_password, 12);
+  // this.confirm_password = await bcrypt.hash(this.confirm_password, 12);
   next();
 });
 
-signupSchema.methods.createJWT = function () {
-  return jwt.sign({ userID: this._id }, "thisisgood", {
-    expiresIn: "10s",
-  });
-};
+// signupSchema.methods.createJWT = function () {
+//   return jwt.sign({ userID: this._id }, "thisisgood", {
+//     expiresIn: "10s",
+//   });
+// };
 
 const Signup = mongoose.model("Signup", signupSchema);
 module.exports = Signup;

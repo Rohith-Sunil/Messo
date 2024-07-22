@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signupFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import Input from "./Input";
@@ -10,6 +11,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
   const [signupState, setSignupState] = useState(fieldsState);
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setSignupState({ ...signupState, [e.target.id]: e.target.value });
@@ -34,6 +36,7 @@ export default function Signup() {
 
       let result = await response.json();
       console.log(result);
+      navigate("/login");
 
       // Optionally, you can call createAccount or handle the result further here
       // createAccount();

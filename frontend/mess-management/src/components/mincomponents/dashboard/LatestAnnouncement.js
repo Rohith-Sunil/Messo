@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../../Auth/authProvider";
 
 const LatestAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/getAllAnnouncements"
+          "http://localhost:5000/api/v1/getAllAnnouncements",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Use token for authorized requests
+            },
+          }
         );
         const data = await response.json();
 
@@ -22,7 +29,7 @@ const LatestAnnouncement = () => {
     };
 
     fetchAnnouncements();
-  }, []);
+  }, [token]);
 
   // Slice to show only the last 3 announcements (most recent) and then reverse the order
   const lastThreeAnnouncements = announcements.slice(-3).reverse();

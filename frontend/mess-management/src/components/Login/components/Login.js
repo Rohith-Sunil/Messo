@@ -194,20 +194,106 @@
 // }
 
 // Login.js
+// import { useState } from "react";
+// import { loginFields } from "../constants/formFields";
+// import FormAction from "./FormAction";
+// import FormExtra from "./FormExtra";
+// import Input from "./Input";
+// import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../../../Auth/authProvider";
+
+// const fields = loginFields;
+// let fieldsState = {};
+// fields.forEach((field) => (fieldsState[field.id] = ""));
+
+// export default function Login() {
+//   const [loginState, setLoginState] = useState(fieldsState);
+//   const navigate = useNavigate();
+//   const { setToken } = useAuth();
+
+//   const handleChange = (e) => {
+//     setLoginState({ ...loginState, [e.target.id]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       let response = await fetch("http://localhost:5000/login", {
+//         method: "POST",
+//         mode: "cors",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(loginState),
+//       });
+
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! status: ${response.status}`);
+//       }
+
+//       let result = await response.json();
+//       console.log("Login result:", result);
+
+//       if (result.message === "loggedin") {
+//         const token = result.token;
+//         const name = result.name;
+//         setToken(token); // Set token in context
+
+//         if (result.foundUser.isAdmin) {
+//           localStorage.setItem("isAdmin", "true");
+//         } else {
+//           localStorage.setItem("isAdmin", "false");
+//         }
+//         console.log(name);
+//         localStorage.setItem("name", name);
+//         localStorage.setItem("message", "loggedin");
+
+//         // Navigate immediately to the home page
+//         navigate("/");
+//       } else {
+//         navigate("/signup"); // Redirect to register page on failed login
+//       }
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   };
+
+//   return (
+//     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+//       <div className="-space-y-px">
+//         {fields.map((field) => (
+//           <Input
+//             key={field.id}
+//             handleChange={handleChange}
+//             value={loginState[field.id]}
+//             labelText={field.labelText}
+//             labelFor={field.labelFor}
+//             id={field.id}
+//             name={field.name}
+//             type={field.type}
+//             isRequired={field.isRequired}
+//             placeholder={field.placeholder}
+//           />
+//         ))}
+//       </div>
+//       {/*
+//       <FormExtra /> */}
+//       <FormAction handleSubmit={handleSubmit} text="Login" />
+//     </form>
+//   );
+// }
+
 import { useState } from "react";
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
 import Input from "./Input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Auth/authProvider";
 
-const fields = loginFields;
-let fieldsState = {};
-fields.forEach((field) => (fieldsState[field.id] = ""));
-
-export default function Login() {
-  const [loginState, setLoginState] = useState(fieldsState);
+const Login = () => {
+  const [loginState, setLoginState] = useState(
+    loginFields.reduce((acc, field) => ({ ...acc, [field.id]: "" }), {})
+  );
   const navigate = useNavigate();
   const { setToken } = useAuth();
 
@@ -218,9 +304,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response = await fetch("http://localhost:5000/login", {
+      const response = await fetch("http://localhost:5000/login", {
         method: "POST",
-        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
@@ -231,27 +316,16 @@ export default function Login() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      let result = await response.json();
-      console.log("Login result:", result);
+      const result = await response.json();
 
-      if (result.message === "loggedin") {
-        const token = result.token;
-        const name = result.name;
-        setToken(token); // Set token in context
-
-        if (result.foundUser.isAdmin) {
-          localStorage.setItem("isAdmin", "true");
-        } else {
-          localStorage.setItem("isAdmin", "false");
-        }
-        console.log(name);
-        localStorage.setItem("name", name);
-        localStorage.setItem("message", "loggedin");
-
-        // Navigate immediately to the home page
-        navigate("/");
+      if (result.success) {
+        localStorage.setItem("name", result.foundUser.name);
+        console.log(result.foundUser.ObjectID);
+        setToken(result.token); // Set token which will also update isAdmin and isSuperAdmin
+        navigate("/"); // Navigate to home on success
       } else {
-        navigate("/signup"); // Redirect to register page on failed login
+        console.error(result.message); // Handle failure
+        navigate("/signup");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -260,25 +334,23 @@ export default function Login() {
 
   return (
     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-      <div className="-space-y-px">
-        {fields.map((field) => (
-          <Input
-            key={field.id}
-            handleChange={handleChange}
-            value={loginState[field.id]}
-            labelText={field.labelText}
-            labelFor={field.labelFor}
-            id={field.id}
-            name={field.name}
-            type={field.type}
-            isRequired={field.isRequired}
-            placeholder={field.placeholder}
-          />
-        ))}
-      </div>
-      {/* 
-      <FormExtra /> */}
+      {loginFields.map((field) => (
+        <Input
+          key={field.id}
+          handleChange={handleChange}
+          value={loginState[field.id]}
+          labelText={field.labelText}
+          labelFor={field.labelFor}
+          id={field.id}
+          name={field.name}
+          type={field.type}
+          isRequired={field.isRequired}
+          placeholder={field.placeholder}
+        />
+      ))}
       <FormAction handleSubmit={handleSubmit} text="Login" />
     </form>
   );
-}
+};
+
+export default Login;

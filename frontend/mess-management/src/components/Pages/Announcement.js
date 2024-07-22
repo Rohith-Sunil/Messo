@@ -58,17 +58,23 @@
 // export default Announcement;
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../Auth/authProvider";
 
 const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [announcementsPerPage] = useState(5); // Adjust the number of announcements per page here
-
+  const { token } = useAuth();
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/getAllAnnouncements"
+          "http://localhost:5000/api/v1/getAllAnnouncements",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Use token for authorized requests
+            },
+          }
         );
         const data = await response.json();
         // Sort the announcements based on the created_at date in descending order
@@ -82,7 +88,7 @@ const Announcement = () => {
     };
 
     fetchAnnouncements();
-  }, []);
+  }, [token]);
 
   // Function to format date in dd mm yyyy format
   const formatDate = (dateString) => {

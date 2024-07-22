@@ -6,10 +6,10 @@ const {
 const { getAllComplaints } = require("../controllers/getAllComplaints");
 const express = require("express");
 const router = express.Router();
-
+const verifyToken = require("../middleware/verifyToken");
 router.post("/sendComplaint", complaintsController);
-router.get("/getComplaints", getAllComplaints);
-router.put("/updateComplaintStatus/:id", updateComplaintStatus);
-router.delete("/deleteComplaint/:id", deleteComplaint);
+router.get("/getComplaints", verifyToken, getAllComplaints);
+router.put("/updateComplaintStatus/:id", verifyToken, updateComplaintStatus);
+router.delete("/deleteComplaint/:id", verifyToken, deleteComplaint);
 
 module.exports = router;

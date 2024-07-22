@@ -188,16 +188,16 @@ import {
   Transition,
 } from "@headlessui/react";
 import classNames from "classnames";
+import { useAuth } from "../../Auth/authProvider";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { userDetails, isAdmin } = useAuth();
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
 
   useEffect(() => {
-    const name = localStorage.getItem("name");
-    const adminStatus = localStorage.getItem("isAdmin");
+    const { name } = userDetails;
     if (name) {
       const nameParts = name.split(" ");
       if (nameParts.length >= 2) {
@@ -209,19 +209,18 @@ export default function Header() {
         setFirstName(nameParts[0]); // Only one name available
       }
     }
-    setIsAdmin(adminStatus === "true"); // Check if isAdmin is true in localStorage
-  }, []);
+  }, [userDetails]);
 
   return (
     <div className="bg-white h-16 px-4 flex justify-between items-center border-b border-gray-200">
       <div>
         <span className="text-gray-700 text-2xl font-bold">
-          {" "}
           {isAdmin ? "Hi, Admin" : `Hi, ${firstName}`}
         </span>
       </div>
       <div className="flex items-center gap-2 mr-2">
-        {/* <Popover className="relative">
+        {/* 
+        <Popover className="relative">
           {({ open }) => (
             <>
               <PopoverButton
@@ -288,7 +287,8 @@ export default function Header() {
               </Transition>
             </>
           )}
-        </Popover> */}
+        </Popover> 
+        */}
         <Menu as="div" className="relative">
           <div>
             <MenuButton className="ml-2 bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-400">
@@ -329,7 +329,7 @@ export default function Header() {
               <MenuItem>
                 {({ active }) => (
                   <div
-                    onClick={() => navigate("/Settings")}
+                    onClick={() => navigate("/settings")}
                     className={classNames(
                       active && "bg-gray-100",
                       "active:bg-gray-200 rounded-sm px-4 py-2 text-gray-700 cursor-pointer focus:bg-gray-200"
