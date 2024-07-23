@@ -40,7 +40,7 @@ Messo is a comprehensive mess management system designed to streamline the opera
 ### Prerequisites
 
 - Node.js
-- npm or yarn
+- npm
 - MongoDB
 
 ### Installation
