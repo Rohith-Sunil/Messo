@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../Auth/authProvider";
+import { baseUrl } from "../../helper";
 
 function ContactForm() {
   const [messageType, setMessageType] = useState("Complaint");
@@ -26,16 +27,13 @@ function ContactForm() {
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/sendComplaint",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${baseUrl}/api/v1/sendComplaint`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
       if (response.ok) {
         // Handle successful response

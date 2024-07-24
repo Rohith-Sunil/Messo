@@ -289,6 +289,7 @@ import FormAction from "./FormAction";
 import Input from "./Input";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Auth/authProvider";
+import { baseUrl } from "../../../helper";
 
 const Login = () => {
   const [loginState, setLoginState] = useState(
@@ -304,7 +305,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(`${baseUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

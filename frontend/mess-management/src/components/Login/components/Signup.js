@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signupFields } from "../constants/formFields";
 import FormAction from "./FormAction";
 import Input from "./Input";
+import { baseUrl } from "../../../helper";
 
 const fields = signupFields;
 let fieldsState = {};
@@ -21,7 +22,7 @@ export default function Signup() {
     console.log(signupState);
 
     try {
-      let response = await fetch("http://localhost:5000/register", {
+      let response = await fetch(`${baseUrl}/register`, {
         method: "POST",
         mode: "cors",
         headers: {

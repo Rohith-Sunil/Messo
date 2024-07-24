@@ -345,6 +345,7 @@
 import React, { useState, useEffect } from "react";
 import { useMenuItems } from "../menureview/menuitems";
 import { useAuth } from "../../../Auth/authProvider";
+import { baseUrl } from "../../../helper";
 
 export default function MenuGrid() {
   const [showModal, setShowModal] = useState(false);
@@ -372,7 +373,7 @@ export default function MenuGrid() {
       console.log(userDetails.ObjectID);
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/userRatings?userId=${userDetails.ObjectID}`,
+          `${baseUrl}/api/v1/userRatings?userId=${userDetails.ObjectID}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -400,7 +401,7 @@ export default function MenuGrid() {
     };
     console.log(formData);
     try {
-      const response = await fetch("http://localhost:5000/api/v1/menuReview", {
+      const response = await fetch(`${baseUrl}/api/v1/menuReview`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

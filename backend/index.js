@@ -136,7 +136,7 @@ const session = require("express-session");
 const verifyToken = require("../backend/middleware/verifyToken");
 const port = process.env.PORT || 5000;
 const sessionOptions = {
-  secret: "thisisnotsecret",
+  secret: process.env.SECRET_KEY,
   resave: false,
   saveUninitialized: false,
 };
@@ -147,8 +147,8 @@ const announce_route = require("./my-routes/announce_route");
 const complaints_route = require("./my-routes/complaint_route");
 
 // JWT Secret Keys (should ideally be in environment variables)
-const accessTokenSecret = "mySecretKey";
-const refreshTokenSecret = "myRefreshSecretKey";
+const accessTokenSecret = process.env.SECRET_KEY;
+const refreshTokenSecret = process.env.SECRET_KEY;
 let refreshTokens = [];
 
 mongoose

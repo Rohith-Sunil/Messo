@@ -77,17 +77,18 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../../Auth/authProvider";
+import { baseUrl } from "../../../helper";
 
 const PopularDays = () => {
   const [topRatedDays, setTopRatedDays] = useState([]);
-  const { token, userDetails } = useAuth();
+  const { userDetails } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const hostelName = userDetails.hostelname;
         const response = await fetch(
-          `http://localhost:5000/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`
+          `${baseUrl}/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`
         );
         const ratingsData = await response.json();
         console.log("Raw data from API:", ratingsData);

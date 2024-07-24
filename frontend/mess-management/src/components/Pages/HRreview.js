@@ -351,12 +351,13 @@
 import React, { useState } from "react";
 import ProfileCard from "../mincomponents/hrreview/ProfileCard";
 import { useAuth } from "../../Auth/authProvider";
-import { useEffect } from "react";
+import { baseUrl } from "../../helper";
+// import { useEffect } from "react";
 
 const fetchHRReviews = async (hrname, token, hostelName) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/HR-Review?name=${encodeURIComponent(
+      `${baseUrl}/api/v1/HR-Review?name=${encodeURIComponent(
         hrname
       )}&hostelName=${encodeURIComponent(hostelName)}`,
       {
@@ -379,7 +380,7 @@ const fetchHRReviews = async (hrname, token, hostelName) => {
 const deleteHRReview = async (reviewId, token, hostelName) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/HR-Review/${reviewId}?hostelName=${encodeURIComponent(
+      `${baseUrl}/api/v1/HR-Review/${reviewId}?hostelName=${encodeURIComponent(
         hostelName
       )}`,
       {
@@ -402,7 +403,7 @@ const deleteHRReview = async (reviewId, token, hostelName) => {
 const deleteAllHRReviews = async (hrname, token, hostelName) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/HR-Review?name=${encodeURIComponent(
+      `${baseUrl}/api/v1/HR-Review?name=${encodeURIComponent(
         hrname
       )}&hostelName=${encodeURIComponent(hostelName)}`,
       {

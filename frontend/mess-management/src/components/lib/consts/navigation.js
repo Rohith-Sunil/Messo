@@ -1,7 +1,7 @@
 import {
   HiOutlineViewGrid,
-  HiOutlineQuestionMarkCircle,
-  HiOutlineCog,
+  // HiOutlineQuestionMarkCircle,
+  // HiOutlineCog,
 } from "react-icons/hi";
 import { LuMenuSquare } from "react-icons/lu";
 import { GrCompliance } from "react-icons/gr";

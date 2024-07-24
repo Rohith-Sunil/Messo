@@ -303,7 +303,7 @@ const linkClasses =
   "flex items-center gap-2 font-light px-3 py-2 hover:bg-neutral-700 hover:no-underline active:bg-neutral-600 rounded-sm text-base";
 
 function Sidebar() {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
   const { logout, isAdmin } = useAuth(); // Destructure isAdmin from useAuth
 
   return (

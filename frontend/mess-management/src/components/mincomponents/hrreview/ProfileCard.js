@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../Auth/authProvider";
+import { baseUrl } from "../../../helper";
 
 function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
   const [message, setMessage] = useState("");
@@ -19,16 +20,13 @@ function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/createReview",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData), // Sending data as an array
-        }
-      );
+      const response = await fetch(`${baseUrl}/api/v1/createReview`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), // Sending data as an array
+      });
 
       if (response.ok) {
         console.log("Review submitted successfully");

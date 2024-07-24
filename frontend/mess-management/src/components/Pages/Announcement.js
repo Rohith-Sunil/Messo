@@ -59,6 +59,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../Auth/authProvider";
+import { baseUrl } from "../../helper";
 
 const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -69,7 +70,7 @@ const Announcement = () => {
     const fetchAnnouncements = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/v1/getAllAnnouncements?hostelName=${userDetails.hostelname}`,
+          `${baseUrl}/api/v1/getAllAnnouncements?hostelName=${userDetails.hostelname}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Use token for authorized requests

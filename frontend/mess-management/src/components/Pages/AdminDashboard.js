@@ -317,6 +317,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../Auth/authProvider";
+import { baseUrl } from "../../helper";
 
 const weekdays = [
   "Monday",
@@ -345,7 +346,7 @@ export default function AdminDashboard() {
         const hostelName = userDetails.hostelname;
 
         const ratingsResponse = await fetch(
-          `http://localhost:5000/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`,
+          `${baseUrl}/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -357,7 +358,7 @@ export default function AdminDashboard() {
         setRatings(ratingsData);
 
         const complaintsResponse = await fetch(
-          `http://localhost:5000/api/v1/getComplaints?hostelName=${hostelName}`,
+          `${baseUrl}/api/v1/getComplaints?hostelName=${hostelName}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -386,23 +387,20 @@ export default function AdminDashboard() {
     try {
       let hostel_name = userDetails.hostelname;
       const isAdmin = localStorage.getItem("isAdmin") === "true";
-      const response = await fetch(
-        "http://localhost:5000/api/v1/createAnnouncement",
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Use token for authorized requests
-          },
-          body: JSON.stringify({
-            subject: subject,
-            announcement: content,
-            isAdmin: isAdmin,
-            hostel_name: hostel_name,
-          }),
-        }
-      );
+      const response = await fetch(`${baseUrl}/api/v1/createAnnouncement`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Use token for authorized requests
+        },
+        body: JSON.stringify({
+          subject: subject,
+          announcement: content,
+          isAdmin: isAdmin,
+          hostel_name: hostel_name,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -419,7 +417,7 @@ export default function AdminDashboard() {
   };
   const handleDeleteComplaint = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/v1/deleteComplaint/${id}`, {
+      await fetch(`${baseUrl}/api/v1/deleteComplaint/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -435,7 +433,7 @@ export default function AdminDashboard() {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await fetch(`http://localhost:5000/api/v1/updateComplaintStatus/${id}`, {
+      await fetch(`${baseUrl}/api/v1/updateComplaintStatus/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
