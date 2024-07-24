@@ -59,7 +59,8 @@ const ProtectedRoute = () => {
   return isAuthenticated ? (
     <Outlet /> // If authenticated, render the child components
   ) : (
-    <Navigate to="/no-access" state={{ from: location }} replace /> // Redirect to a login or access denied page
+    <Navigate to="/login" />
+    // <Navigate to="/no-access" state={{ from: location }} replace /> // Redirect to a login or access denied page
   );
 };
 
