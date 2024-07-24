@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useAuth } from "../../../Auth/authProvider";
 
 function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const { userDetails } = useAuth();
+  const email = userDetails.email;
 
   if (!isOpen) return null;
 
@@ -39,7 +41,6 @@ function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
     } catch (error) {
       console.error("Error:", error);
     }
-    setEmail("");
     setMessage("");
   }
 
@@ -68,10 +69,10 @@ function ReviewDialog({ isOpen, onClose, hrName, hostelName }) {
             <input
               type="email"
               id="email"
-              className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
-              placeholder="name@iiitm.ac.in"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              readOnly // Make the input read-only
+              className="w-full mt-2 p-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded text-white placeholder-gray-400 focus:outline-none "
+              placeholder="name@iiitm.ac.in"
             />
           </div>
           <div className="mb-4">

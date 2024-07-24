@@ -30,9 +30,27 @@ const announceController = async (req, res) => {
   }
 };
 
+// const getAllAnnouncements = async (req, res) => {
+//   try {
+//     const allAnnouncements = await Announcements.find({});
+//     res.status(200).json(allAnnouncements);
+//   } catch (error) {
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
 const getAllAnnouncements = async (req, res) => {
   try {
-    const allAnnouncements = await Announcements.find({});
+    const { hostelName } = req.query;
+    if (!hostelName) {
+      return res.status(400).json({ error: "Hostel name is required" });
+    }
+
+    // Fetch and sort announcements by created_at in descending order
+    const allAnnouncements = await Announcements.find({
+      hostel_name: hostelName,
+    }).sort({ created_at: -1 });
+
     res.status(200).json(allAnnouncements);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });

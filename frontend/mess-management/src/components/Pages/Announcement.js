@@ -64,12 +64,12 @@ const Announcement = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [announcementsPerPage] = useState(5); // Adjust the number of announcements per page here
-  const { token } = useAuth();
+  const { token, userDetails } = useAuth();
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/v1/getAllAnnouncements",
+          `http://localhost:5000/api/v1/getAllAnnouncements?hostelName=${userDetails.hostelname}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Use token for authorized requests
@@ -88,7 +88,7 @@ const Announcement = () => {
     };
 
     fetchAnnouncements();
-  }, [token]);
+  }, [token, userDetails]);
 
   // Function to format date in dd mm yyyy format
   const formatDate = (dateString) => {

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { useAuth } from "../../Auth/authProvider";
 
 function ContactForm() {
   const [messageType, setMessageType] = useState("Complaint");
-  const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const { userDetails } = useAuth();
 
-  const hostel_name = "BH-3";
+  const hostel_name = userDetails.hostelname;
+  const email = userDetails.email;
 
   const handleTypeChange = (e) => {
     setMessageType(e.target.value);
@@ -47,7 +49,7 @@ function ContactForm() {
     }
     setMessage("");
     setSubject("");
-    setEmail("");
+    // setEmail("");
   };
 
   return (
@@ -65,12 +67,20 @@ function ContactForm() {
             <label htmlFor="email" className="block text-gray-400">
               Your email
             </label>
-            <input
+            {/* <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-600"
+              placeholder="name@iiitm.ac.in"
+            /> */}
+            <input
+              type="email"
+              id="email"
+              value={email}
+              readOnly // Make the input read-only
+              className="w-full mt-2 p-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded text-white placeholder-gray-400 focus:outline-none "
               placeholder="name@iiitm.ac.in"
             />
           </div>

@@ -219,6 +219,7 @@ const AuthProvider = ({ children }) => {
         email: decoded.email,
         ObjectID: decoded.ObjectID,
         name: decoded.name,
+        hostelname: decoded.hostelname,
       });
       // console.log(userDetails.ObjectID);
     }
@@ -234,6 +235,7 @@ const AuthProvider = ({ children }) => {
       email: decoded.email,
       ObjectID: decoded.ObjectID,
       name: decoded.name,
+      hostelname: decoded.hostelname,
     });
   };
 

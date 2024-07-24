@@ -123,7 +123,7 @@
 // app.listen(5000, () => {
 //   console.log(`Server started at port ${port}...`);
 // });
-
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -134,7 +134,7 @@ const jwt = require("jsonwebtoken");
 const newUser = require("./models/signup");
 const session = require("express-session");
 const verifyToken = require("../backend/middleware/verifyToken");
-const port = 5000;
+const port = process.env.PORT || 5000;
 const sessionOptions = {
   secret: "thisisnotsecret",
   resave: false,
@@ -180,6 +180,7 @@ const generateAccessToken = (user) => {
       isAdmin: user.isAdmin,
       email: user.email,
       name: user.name,
+      hostelname: user.hostel_name,
       ObjectID: user._id,
     },
     accessTokenSecret,
@@ -196,6 +197,7 @@ const generateRefreshToken = (user) => {
       isAdmin: user.isAdmin,
       email: user.email,
       name: user.name,
+      hostelname: user.hostel_name,
       ObjectID: user._id,
     },
     refreshTokenSecret

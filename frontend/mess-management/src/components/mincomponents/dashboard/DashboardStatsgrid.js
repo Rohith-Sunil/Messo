@@ -1,4 +1,133 @@
+// import React from "react";
+// import {
+//   MdOutlineFreeBreakfast,
+//   MdOutlineLunchDining,
+//   MdOutlineFreeBreakfast as MdOutlineSnack,
+//   MdDinnerDining,
+// } from "react-icons/md";
+
+// const menuData = {
+// Monday: {
+//   breakfast: "Poha, Namkeen, Jalebi, Omelette",
+//   lunch: "Masala-Bhindi, Chapati, Rice, Lobia-dal/Masoor-dal, Dah, Papad",
+//   snacks: "Samosa, Tea",
+//   dinner: "Patta Gobi, Chapati, Arhar dal fry, Fried Rice, Ice-cream",
+// },
+// Tuesday: {
+//   breakfast: "Paneer Bhurji, Parathe, Fruit",
+//   lunch: "Baigan ka Bharta, Chapati, Rice, Arhar dal fry, Jeera-Chach",
+//   snacks: "Chowmien, Tea",
+//   dinner: "Aloo-Parval, Chapati, Rice, Papad",
+// },
+// Wednesday: {
+//   breakfast: "Vada Sambhar, Egg Bhurji",
+//   lunch: "Butter-Paneer-Masala, Chapati, Jeera-Rice, Chana dal, Lassi",
+//   snacks: "Pyaaj-Pakode, Tea",
+//   dinner: "Soya-vadi chapati, Veg-Biryani, Moong dal, Sevai kheer",
+// },
+// Thursday: {
+//   breakfast: "Sandwich, Macaroni, Fruit",
+//   lunch: "Chole-Bhature, Rice, Boondi Raita",
+//   snacks: "Bhelpuri, Tea",
+//   dinner: "Egg-curry, Aloo-matar gravy, Chapati, Rice",
+// },
+// Friday: {
+//   breakfast: "Pav bhaji, Boiled Egg, Fruit",
+//   lunch: "Rajma, Chapati, Seasonal-veg, Rice, Dahi, Papad",
+//   snacks: "Poha, Tea",
+//   dinner: "Masala-bhindi, Chapati, Rice, Arhar-dal fry, Sweet",
+// },
+// Saturday: {
+//   breakfast: "Fried-Idli-sambhar, Veg-upma, Omelette",
+//   lunch: "Puri, Aloo-matar, Kaddu ki sabji, Rice, Veg Raita",
+//   snacks: "Dabeli, Tea",
+//   dinner: "Kadai-paneer, Chapati, Rice, Moong dal fry, Gulabjamun",
+// },
+// Sunday: {
+//   breakfast: "Aloo-Bedai, Fruit",
+//   lunch: "Gobhi-matar, Chapati, Arhar dal fry, Rice, Papad",
+//   snacks: "Maggie, Tea",
+//   dinner: "Aloo paratha, Dahi, Green and Sweet chutney",
+// },
+// };
+
+// // Get the current day of the week
+// const daysOfWeek = [
+//   "Sunday",
+//   "Monday",
+//   "Tuesday",
+//   "Wednesday",
+//   "Thursday",
+//   "Friday",
+//   "Saturday",
+// ];
+// const currentDay = daysOfWeek[new Date().getDay()];
+
+// export default function DashboardStatsgrid() {
+//   const todayMenu = menuData[currentDay];
+
+//   return (
+//     <div className="flex gap-4 w-full pt-1">
+//       <BoxWrapper>
+//         <MealItem
+//           icon={MdOutlineFreeBreakfast}
+//           mealType="Breakfast"
+//           meal={todayMenu.breakfast}
+//         />
+//       </BoxWrapper>
+//       <BoxWrapper>
+//         <MealItem
+//           icon={MdOutlineLunchDining}
+//           mealType="Lunch"
+//           meal={todayMenu.lunch}
+//         />
+//       </BoxWrapper>
+//       <BoxWrapper>
+//         <MealItem
+//           icon={MdOutlineSnack}
+//           mealType="Snacks"
+//           meal={todayMenu.snacks}
+//         />
+//       </BoxWrapper>
+//       <BoxWrapper>
+//         <MealItem
+//           icon={MdDinnerDining}
+//           mealType="Dinner"
+//           meal={todayMenu.dinner}
+//         />
+//       </BoxWrapper>
+//     </div>
+//   );
+// }
+
+// function BoxWrapper({ children }) {
+//   return (
+//     <div className="bg-white rounded-lg p-4 flex-1 border border-gray-200 flex items-center shadow-md">
+//       {children}
+//     </div>
+//   );
+// }
+
+// function MealItem({ icon: Icon, mealType, meal }) {
+//   return (
+//     <div className="flex items-center">
+//       <div className="rounded-full h-12 w-12 flex items-center justify-center bg-teal-600">
+//         <Icon className="text-2xl text-white" fontSize={24} />
+//       </div>
+//       <div className="pl-4">
+//         <span className="text-sm text-gray-500 font-light">{mealType}</span>
+//         <div className="flex items-center">
+//           <strong className="text-xl text-gray-700 font-semibold">
+//             {meal}
+//           </strong>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 import React from "react";
+import { useAuth } from "../../../Auth/authProvider"; // Adjust the import according to your project structure
 import {
   MdOutlineFreeBreakfast,
   MdOutlineLunchDining,
@@ -7,51 +136,110 @@ import {
 } from "react-icons/md";
 
 const menuData = {
-  Monday: {
-    breakfast: "Poha, Namkeen, Jalebi, Omelette",
-    lunch: "Masala-Bhindi, Chapati, Rice, Lobia-dal/Masoor-dal, Dah, Papad",
-    snacks: "Samosa, Tea",
-    dinner: "Patta Gobi, Chapati, Arhar dal fry, Fried Rice, Ice-cream",
+  "BH-3": {
+    Monday: {
+      breakfast: "Poha, Namkeen, Jalebi, Omelette",
+      lunch: "Masala-Bhindi, Chapati, Rice, Lobia-dal/Masoor-dal, Dah, Papad",
+      snacks: "Samosa, Tea",
+      dinner: "Patta Gobi, Chapati, Arhar dal fry, Fried Rice, Ice-cream",
+    },
+    Tuesday: {
+      breakfast: "Paneer Bhurji, Parathe, Fruit",
+      lunch: "Baigan ka Bharta, Chapati, Rice, Arhar dal fry, Jeera-Chach",
+      snacks: "Chowmien, Tea",
+      dinner: "Aloo-Parval, Chapati, Rice, Papad",
+    },
+    Wednesday: {
+      breakfast: "Vada Sambhar, Egg Bhurji",
+      lunch: "Butter-Paneer-Masala, Chapati, Jeera-Rice, Chana dal, Lassi",
+      snacks: "Pyaaj-Pakode, Tea",
+      dinner: "Soya-vadi chapati, Veg-Biryani, Moong dal, Sevai kheer",
+    },
+    Thursday: {
+      breakfast: "Sandwich, Macaroni, Fruit",
+      lunch: "Chole-Bhature, Rice, Boondi Raita",
+      snacks: "Bhelpuri, Tea",
+      dinner: "Egg-curry, Aloo-matar gravy, Chapati, Rice",
+    },
+    Friday: {
+      breakfast: "Pav bhaji, Boiled Egg, Fruit",
+      lunch: "Rajma, Chapati, Seasonal-veg, Rice, Dahi, Papad",
+      snacks: "Poha, Tea",
+      dinner: "Masala-bhindi, Chapati, Rice, Arhar-dal fry, Sweet",
+    },
+    Saturday: {
+      breakfast: "Fried-Idli-sambhar, Veg-upma, Omelette",
+      lunch: "Puri, Aloo-matar, Kaddu ki sabji, Rice, Veg Raita",
+      snacks: "Dabeli, Tea",
+      dinner: "Kadai-paneer, Chapati, Rice, Moong dal fry, Gulabjamun",
+    },
+    Sunday: {
+      breakfast: "Aloo-Bedai, Fruit",
+      lunch: "Gobhi-matar, Chapati, Arhar dal fry, Rice, Papad",
+      snacks: "Maggie, Tea",
+      dinner: "Aloo paratha, Dahi, Green and Sweet chutney",
+    },
   },
-  Tuesday: {
-    breakfast: "Paneer Bhurji, Parathe, Fruit",
-    lunch: "Baigan ka Bharta, Chapati, Rice, Arhar dal fry, Jeera-Chach",
-    snacks: "Chowmien, Tea",
-    dinner: "Aloo-Parval, Chapati, Rice, Papad",
+  "BH-2": {
+    Monday: {
+      breakfast: "Pancakes, Fruit Salad, Yogurt, Orange Juice",
+      lunch: "Vegetable Lasagna, Garlic Bread, Mixed Green Salad, Apple Pie",
+      snacks: "Veggie Wraps, Lemonade",
+      dinner: "Vegetable Stir Fry, Brown Rice, Spring Rolls, Mango Sorbet",
+    },
+    Tuesday: {
+      breakfast: "French Toast, Fresh Berries, Smoothie",
+      lunch:
+        "Grilled Vegetable Panini, Sweet Potato Fries, Caesar Salad, Brownie",
+      snacks: "Cheese Platter, Iced Tea",
+      dinner: "Vegetable Quesadillas, Guacamole, Black Bean Soup, Churros",
+    },
+    Wednesday: {
+      breakfast: "Oatmeal, Banana, Almond Milk, Herbal Tea",
+      lunch: "Margherita Pizza, Mixed Greens, Fruit Tart",
+      snacks: "Fruit Kabobs, Mint Lemonade",
+      dinner:
+        "Vegetarian Shepherd’s Pie, Steamed Broccoli, Bread Rolls, Chocolate Mousse",
+    },
+    Thursday: {
+      breakfast: "Avocado Toast, Cherry Tomatoes, Green Juice",
+      lunch: "Vegetable Sushi, Miso Soup, Edamame, Mochi Ice Cream",
+      snacks: "Veggie Chips, Fresh Juice",
+      dinner:
+        "Eggplant Parmesan, Spaghetti Aglio e Olio, Caprese Salad, Tiramisu",
+    },
+    Friday: {
+      breakfast: "Bagel with Cream Cheese, Grapes, Orange Juice",
+      lunch: "Falafel Wraps, Tabbouleh, Hummus, Baklava",
+      snacks: "Veggie Spring Rolls, Green Tea",
+      dinner: "Vegetable Pad Thai, Cucumber Salad, Mango Sticky Rice",
+    },
+    Saturday: {
+      breakfast: "Smoothie Bowl, Mixed Nuts, Herbal Tea",
+      lunch: "Vegetable Burrito, Corn Salad, Guacamole, Chocolate Chip Cookie",
+      snacks: "Stuffed Peppers, Lemonade",
+      dinner: "Vegetable Curry, Basmati Rice, Naan, Coconut Ice Cream",
+    },
+    Sunday: {
+      breakfast: "Tofu Scramble, Whole Wheat Toast, Fresh Juice",
+      lunch: "Minestrone Soup, Garlic Bread, Caesar Salad, Lemon Tart",
+      snacks: "Veggie Sushi, Iced Green Tea",
+      dinner:
+        "Stuffed Bell Peppers, Quinoa Salad, Roasted Veggies, Fruit Sorbet",
+    },
   },
-  Wednesday: {
-    breakfast: "Vada Sambhar, Egg Bhurji",
-    lunch: "Butter-Paneer-Masala, Chapati, Jeera-Rice, Chana dal, Lassi",
-    snacks: "Pyaaj-Pakode, Tea",
-    dinner: "Soya-vadi chapati, Veg-Biryani, Moong dal, Sevai kheer",
+  "BH-4": {
+    Monday: {
+      breakfast: "Paneer Bhurji, Parathe, Fruit",
+      lunch: "Baigan ka Bharta, Chapati, Rice, Arhar dal fry, Jeera-Chach",
+      snacks: "Chowmien, Tea",
+      dinner: "Aloo-Parval, Chapati, Rice, Papad",
+    },
+    // ...other days
   },
-  Thursday: {
-    breakfast: "Sandwich, Macaroni, Fruit",
-    lunch: "Chole-Bhature, Rice, Boondi Raita",
-    snacks: "Bhelpuri, Tea",
-    dinner: "Egg-curry, Aloo-matar gravy, Chapati, Rice",
-  },
-  Friday: {
-    breakfast: "Pav bhaji, Boiled Egg, Fruit",
-    lunch: "Rajma, Chapati, Seasonal-veg, Rice, Dahi, Papad",
-    snacks: "Poha, Tea",
-    dinner: "Masala-bhindi, Chapati, Rice, Arhar-dal fry, Sweet",
-  },
-  Saturday: {
-    breakfast: "Fried-Idli-sambhar, Veg-upma, Omelette",
-    lunch: "Puri, Aloo-matar, Kaddu ki sabji, Rice, Veg Raita",
-    snacks: "Dabeli, Tea",
-    dinner: "Kadai-paneer, Chapati, Rice, Moong dal fry, Gulabjamun",
-  },
-  Sunday: {
-    breakfast: "Aloo-Bedai, Fruit",
-    lunch: "Gobhi-matar, Chapati, Arhar dal fry, Rice, Papad",
-    snacks: "Maggie, Tea",
-    dinner: "Aloo paratha, Dahi, Green and Sweet chutney",
-  },
+  // Add more hostels as needed
 };
 
-// Get the current day of the week
 const daysOfWeek = [
   "Sunday",
   "Monday",
@@ -64,38 +252,42 @@ const daysOfWeek = [
 const currentDay = daysOfWeek[new Date().getDay()];
 
 export default function DashboardStatsgrid() {
-  const todayMenu = menuData[currentDay];
+  const { userDetails } = useAuth();
+  const selectedHostel = userDetails.hostelname;
+  const todayMenu = menuData[selectedHostel][currentDay];
 
   return (
-    <div className="flex gap-4 w-full pt-1">
-      <BoxWrapper>
-        <MealItem
-          icon={MdOutlineFreeBreakfast}
-          mealType="Breakfast"
-          meal={todayMenu.breakfast}
-        />
-      </BoxWrapper>
-      <BoxWrapper>
-        <MealItem
-          icon={MdOutlineLunchDining}
-          mealType="Lunch"
-          meal={todayMenu.lunch}
-        />
-      </BoxWrapper>
-      <BoxWrapper>
-        <MealItem
-          icon={MdOutlineSnack}
-          mealType="Snacks"
-          meal={todayMenu.snacks}
-        />
-      </BoxWrapper>
-      <BoxWrapper>
-        <MealItem
-          icon={MdDinnerDining}
-          mealType="Dinner"
-          meal={todayMenu.dinner}
-        />
-      </BoxWrapper>
+    <div className="w-full pt-1">
+      <div className="flex gap-4">
+        <BoxWrapper>
+          <MealItem
+            icon={MdOutlineFreeBreakfast}
+            mealType="Breakfast"
+            meal={todayMenu.breakfast}
+          />
+        </BoxWrapper>
+        <BoxWrapper>
+          <MealItem
+            icon={MdOutlineLunchDining}
+            mealType="Lunch"
+            meal={todayMenu.lunch}
+          />
+        </BoxWrapper>
+        <BoxWrapper>
+          <MealItem
+            icon={MdOutlineSnack}
+            mealType="Snacks"
+            meal={todayMenu.snacks}
+          />
+        </BoxWrapper>
+        <BoxWrapper>
+          <MealItem
+            icon={MdDinnerDining}
+            mealType="Dinner"
+            meal={todayMenu.dinner}
+          />
+        </BoxWrapper>
+      </div>
     </div>
   );
 }

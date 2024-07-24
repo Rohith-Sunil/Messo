@@ -343,7 +343,7 @@
 // }
 
 import React, { useState, useEffect } from "react";
-import { items } from "./menuitems";
+import { useMenuItems } from "../menureview/menuitems";
 import { useAuth } from "../../../Auth/authProvider";
 
 export default function MenuGrid() {
@@ -353,6 +353,7 @@ export default function MenuGrid() {
   const [day, setDay] = useState(null);
   const [userRatings, setUserRatings] = useState([]);
   const { userDetails, token } = useAuth();
+  const items = useMenuItems();
 
   const weekdays = [
     "Monday",
@@ -389,7 +390,7 @@ export default function MenuGrid() {
 
   async function handleFinalSubmit() {
     console.log(userDetails);
-    const hostelName = "BH-3";
+    const hostelName = userDetails.hostelname; // Dynamic hostel name
     const formData = {
       userId: userDetails.ObjectID,
       hostel_name: hostelName,

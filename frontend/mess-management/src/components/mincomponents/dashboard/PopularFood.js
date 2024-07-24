@@ -76,15 +76,18 @@
 // export default PopularDays;
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../../Auth/authProvider";
 
 const PopularDays = () => {
   const [topRatedDays, setTopRatedDays] = useState([]);
+  const { token, userDetails } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const hostelName = userDetails.hostelname;
         const response = await fetch(
-          "http://localhost:5000/api/v1/ratingByDayAndMealType"
+          `http://localhost:5000/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`
         );
         const ratingsData = await response.json();
         console.log("Raw data from API:", ratingsData);
@@ -98,7 +101,7 @@ const PopularDays = () => {
       }
     };
     fetchData();
-  }, []); // Empty dependency array to fetch data only once on component mount
+  }, [userDetails]); // Empty dependency array to fetch data only once on component mount
 
   const sortTopRatedDays = (data) => {
     return data

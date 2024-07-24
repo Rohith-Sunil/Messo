@@ -337,13 +337,15 @@ export default function AdminDashboard() {
   const [content, setContent] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const { token } = useAuth();
+  const { token, userDetails } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       try {
+        const hostelName = userDetails.hostelname;
+
         const ratingsResponse = await fetch(
-          "http://localhost:5000/api/v1/ratingByDayAndMealType",
+          `http://localhost:5000/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -355,7 +357,7 @@ export default function AdminDashboard() {
         setRatings(ratingsData);
 
         const complaintsResponse = await fetch(
-          "http://localhost:5000/api/v1/getComplaints",
+          `http://localhost:5000/api/v1/getComplaints?hostelName=${hostelName}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -371,7 +373,7 @@ export default function AdminDashboard() {
     }
 
     fetchData();
-  }, [token]);
+  }, [token, userDetails.hostelname]);
 
   const getRating = (day, mealType) => {
     const rating = ratings.find(
@@ -382,7 +384,7 @@ export default function AdminDashboard() {
 
   const handleSendAnnouncement = async () => {
     try {
-      let hostel_name = "BH-3";
+      let hostel_name = userDetails.hostelname;
       const isAdmin = localStorage.getItem("isAdmin") === "true";
       const response = await fetch(
         "http://localhost:5000/api/v1/createAnnouncement",

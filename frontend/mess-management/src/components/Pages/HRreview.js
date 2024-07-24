@@ -351,13 +351,14 @@
 import React, { useState } from "react";
 import ProfileCard from "../mincomponents/hrreview/ProfileCard";
 import { useAuth } from "../../Auth/authProvider";
+import { useEffect } from "react";
 
-const fetchHRReviews = async (hrname, token) => {
+const fetchHRReviews = async (hrname, token, hostelName) => {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/HR-Review?name=${encodeURIComponent(
         hrname
-      )}`,
+      )}&hostelName=${encodeURIComponent(hostelName)}`,
       {
         headers: {
           Authorization: `Bearer ${token}`, // Use token for authorized requests
@@ -375,10 +376,12 @@ const fetchHRReviews = async (hrname, token) => {
   }
 };
 
-const deleteHRReview = async (reviewId, token) => {
+const deleteHRReview = async (reviewId, token, hostelName) => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/v1/HR-Review/${reviewId}`,
+      `http://localhost:5000/api/v1/HR-Review/${reviewId}?hostelName=${encodeURIComponent(
+        hostelName
+      )}`,
       {
         method: "DELETE",
         headers: {
@@ -396,12 +399,12 @@ const deleteHRReview = async (reviewId, token) => {
   }
 };
 
-const deleteAllHRReviews = async (hrname, token) => {
+const deleteAllHRReviews = async (hrname, token, hostelName) => {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/HR-Review?name=${encodeURIComponent(
         hrname
-      )}`,
+      )}&hostelName=${encodeURIComponent(hostelName)}`,
       {
         method: "DELETE",
         headers: {
@@ -423,7 +426,7 @@ export default function HRreview() {
   const [selectedHRReviews, setSelectedHRReviews] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewsPerPage] = useState(5);
-  const { isSuperAdmin, token } = useAuth();
+  const { isSuperAdmin, token, userDetails } = useAuth();
 
   const hrData = [
     {
@@ -460,7 +463,11 @@ export default function HRreview() {
 
   const handleHRClick = async (hrName) => {
     try {
-      const reviews = await fetchHRReviews(hrName, token);
+      const reviews = await fetchHRReviews(
+        hrName,
+        token,
+        userDetails.hostelname
+      );
       reviews.reverse();
       console.log(reviews);
       setSelectedHRReviews({ name: hrName, reviews });
@@ -472,7 +479,11 @@ export default function HRreview() {
   };
 
   const handleDeleteReview = async (reviewId) => {
-    const success = await deleteHRReview(reviewId, token);
+    const success = await deleteHRReview(
+      reviewId,
+      token,
+      userDetails.hostelname
+    );
     if (success) {
       setSelectedHRReviews((prev) => ({
         ...prev,
@@ -482,7 +493,11 @@ export default function HRreview() {
   };
 
   const handleDeleteAllReviews = async () => {
-    const success = await deleteAllHRReviews(selectedHRReviews.name, token);
+    const success = await deleteAllHRReviews(
+      selectedHRReviews.name,
+      token,
+      userDetails.hostelname
+    );
     if (success) {
       setSelectedHRReviews((prev) => ({ ...prev, reviews: [] }));
     }
