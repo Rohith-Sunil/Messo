@@ -20,8 +20,8 @@ const RoutesConfig = () => {
 
   // Define routes accessible only to authenticated users
   const AuthenticatedRoutes = (
-    <Route path="/user" element={<ProtectedRoute />}>
-      <Route path="/user" element={<Layout />}>
+    <Route path="/" element={<ProtectedRoute />}>
+      <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/complaints" element={<Complaints />} />
@@ -40,7 +40,7 @@ const RoutesConfig = () => {
   // Define public routes accessible to all users
   const PublicRoutes = (
     <>
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/home" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/no-access" element={<NoAccess />} />
