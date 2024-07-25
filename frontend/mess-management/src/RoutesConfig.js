@@ -31,6 +31,9 @@ const RoutesConfig = () => {
         {/* <Route path="/admin" element={<AdminProtectedRoute />}>
           <Route path="/admin" element={<AdminDashboard />} />
         </Route> */}
+        {/* <Route path="/admin" element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Route> */}
 
         <Route path="/hrReview" element={<HRreview />} />
       </Route>
