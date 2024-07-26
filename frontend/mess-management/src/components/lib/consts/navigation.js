@@ -13,37 +13,37 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: "admindashboard",
     label: "Admin Dashboard",
-    path: "/admin",
+    path: "/app/admin",
     icon: <HiOutlineViewGrid />,
   },
   {
     key: "dashboard",
     label: "Dashboard",
-    path: "/",
+    path: "/app",
     icon: <HiOutlineViewGrid />,
   },
   {
     key: "menu",
     label: "Menu Review",
-    path: "/menu",
+    path: "/app/menu",
     icon: <LuMenuSquare />,
   },
   {
     key: "cs",
     label: "Contact Us",
-    path: "/complaints",
+    path: "/app/complaints",
     icon: <GrCompliance />,
   },
   {
     key: "announcement",
     label: "Announcement",
-    path: "/announcement",
+    path: "/app/announcement",
     icon: <TfiAnnouncement />,
   },
   {
     key: "hrreview",
     label: "HR Review",
-    path: "/hrreview",
+    path: "/app/hrreview",
     icon: <BsPersonCheck />,
   },
 ];

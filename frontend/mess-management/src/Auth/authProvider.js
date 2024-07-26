@@ -246,7 +246,7 @@ const AuthProvider = ({ children }) => {
     setIsAdmin(false);
     setIsSuperAdmin(false);
     setUserDetails({});
-    window.location.href = "/home";
+    window.location.href = "/";
   };
 
   const contextValue = useMemo(
