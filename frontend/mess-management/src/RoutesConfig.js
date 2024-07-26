@@ -18,24 +18,49 @@ import AdminProtectedRoute from "./Auth/adminProtect";
 const RoutesConfig = () => {
   const { token } = useAuth();
 
+  // // Define routes accessible only to authenticated users
+  // const AuthenticatedRoutes = (
+  //   <Route path="/" element={<ProtectedRoute />}>
+  //     <Route path="/" element={<Layout />}>
+  //       <Route index element={<Dashboard />} />
+  //       <Route path="/menu" element={<Menu />} />
+  //       <Route path="/complaints" element={<Complaints />} />
+  //       <Route path="/announcement" element={<Announcement />} />
+
+  //       <Route path="/admin" element={<AdminDashboard />} />
+  //       {/* <Route path="/admin" element={<AdminProtectedRoute />}>
+  //         <Route path="/admin" element={<AdminDashboard />} />
+  //       </Route> */}
+  //       {/* <Route path="/admin" element={<AdminProtectedRoute />}>
+  //         <Route path="/admin" element={<AdminDashboard />} />
+  //       </Route> */}
+
+  //       <Route path="/hrReview" element={<HRreview />} />
+  //     </Route>
+  //   </Route>
+  // );
+
+  // // Define public routes accessible to all users
+  // const PublicRoutes = (
+  //   <>
+  //     <Route path="/home" element={<LandingPage />} />
+  //     <Route path="/login" element={<LoginPage />} />
+  //     <Route path="/signup" element={<SignupPage />} />
+  //     <Route path="/no-access" element={<NoAccess />} />
+  //     <Route path="*" element={<NoAccess />} />
+  //   </>
+  // );
+
   // Define routes accessible only to authenticated users
   const AuthenticatedRoutes = (
-    <Route path="/" element={<ProtectedRoute />}>
+    <Route path="/app" element={<ProtectedRoute />}>
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/complaints" element={<Complaints />} />
-        <Route path="/announcement" element={<Announcement />} />
-
-        <Route path="/admin" element={<AdminDashboard />} />
-        {/* <Route path="/admin" element={<AdminProtectedRoute />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Route> */}
-        {/* <Route path="/admin" element={<AdminProtectedRoute />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Route> */}
-
-        <Route path="/hrReview" element={<HRreview />} />
+        <Route path="menu" element={<Menu />} />
+        <Route path="complaints" element={<Complaints />} />
+        <Route path="announcement" element={<Announcement />} />
+        <Route path="admin" element={<AdminDashboard />} />
+        <Route path="hrReview" element={<HRreview />} />
       </Route>
     </Route>
   );
@@ -43,6 +68,7 @@ const RoutesConfig = () => {
   // Define public routes accessible to all users
   const PublicRoutes = (
     <>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/home" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
