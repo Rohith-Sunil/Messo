@@ -352,6 +352,8 @@ import React, { useState } from "react";
 import ProfileCard from "../mincomponents/hrreview/ProfileCard";
 import { useAuth } from "../../Auth/authProvider";
 import { baseUrl } from "../../helper";
+import { hrProfile } from "../mincomponents/hrreview/hrData";
+import { useEffect } from "react";
 // import { useEffect } from "react";
 
 const fetchHRReviews = async (hrname, token, hostelName) => {
@@ -428,39 +430,13 @@ export default function HRreview() {
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewsPerPage] = useState(5);
   const { isSuperAdmin, token, userDetails } = useAuth();
-
-  const hrData = [
-    {
-      name: "Suyash",
-      url: "https://randomuser.me/api/portraits/men/1.jpg",
-      hostelName: "BH-3",
-    },
-    {
-      name: "Hari",
-      url: "https://randomuser.me/api/portraits/men/7.jpg",
-      hostelName: "BH-3",
-    },
-    {
-      name: "Kavin",
-      url: "https://randomuser.me/api/portraits/men/9.jpg",
-      hostelName: "BH-3",
-    },
-    {
-      name: "Varun",
-      url: "https://randomuser.me/api/portraits/men/10.jpg",
-      hostelName: "BH-3",
-    },
-    {
-      name: "Rahul",
-      url: "https://randomuser.me/api/portraits/men/18.jpg",
-      hostelName: "BH-3",
-    },
-    {
-      name: "Harsh",
-      url: "https://randomuser.me/api/portraits/men/44.jpg",
-      hostelName: "BH-3",
-    },
-  ];
+  const [hrData, setHRData] = useState([]);
+  useEffect(() => {
+    if (userDetails?.hostelname) {
+      const hrprofs = hrProfile[userDetails.hostelname] || [];
+      setHRData(hrprofs);
+    }
+  }, [userDetails]);
 
   const handleHRClick = async (hrName) => {
     try {
