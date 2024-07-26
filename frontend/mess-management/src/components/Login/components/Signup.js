@@ -86,7 +86,7 @@ fields.forEach((field) => (fieldsState[field.id] = ""));
 export default function Signup() {
   const [signupState, setSignupState] = useState({
     ...fieldsState,
-    hostel_name: "BH-2", // Default value for the dropdown
+    hostel_name: "BH-3", // Default value for the dropdown
   });
   const navigate = useNavigate();
 
@@ -172,7 +172,7 @@ export default function Signup() {
         <Select
           id="hostel_name"
           name="hostel_name"
-          value={signupState.hostelName}
+          value={signupState.hostel_name}
           handleChange={handleSelectChange}
           labelText="Hostel Name"
           isRequired={true}
