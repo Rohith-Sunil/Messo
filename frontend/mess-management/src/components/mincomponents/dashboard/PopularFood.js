@@ -81,14 +81,19 @@ import { baseUrl } from "../../../helper";
 
 const PopularDays = () => {
   const [topRatedDays, setTopRatedDays] = useState([]);
-  const { userDetails } = useAuth();
+  const { userDetails, token } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const hostelName = userDetails.hostelname;
         const response = await fetch(
-          `${baseUrl}/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`
+          `${baseUrl}/api/v1/ratingByDayAndMealType?hostelName=${hostelName}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const ratingsData = await response.json();
         console.log("Raw data from API:", ratingsData);
@@ -102,7 +107,7 @@ const PopularDays = () => {
       }
     };
     fetchData();
-  }, [userDetails]); // Empty dependency array to fetch data only once on component mount
+  }, [userDetails, token]); // Empty dependency array to fetch data only once on component mount
 
   const sortTopRatedDays = (data) => {
     return data

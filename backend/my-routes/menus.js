@@ -36,7 +36,7 @@ router.get("/userRatings", getUserRatings);
 //     ]);
 //     res.json(ratingByDay);
 // });
-router.get("/ratingByDayAndMealType", async (req, res) => {
+router.get("/ratingByDayAndMealType", verifyToken, async (req, res) => {
   try {
     const { hostelName } = req.query;
     if (!hostelName) {
