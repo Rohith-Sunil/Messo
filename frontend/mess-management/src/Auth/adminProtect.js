@@ -9,3 +9,5 @@ const AdminProtectedRoute = () => {
 };
 
 export default AdminProtectedRoute;
+
+//not used
