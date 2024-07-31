@@ -334,7 +334,7 @@ const Login = () => {
   };
 
   return (
-    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+    <form className="mt-8 space-y-6 px-4" onSubmit={handleSubmit}>
       {loginFields.map((field) => (
         <Input
           key={field.id}
