@@ -154,7 +154,7 @@ export default function DashboardStatsgrid() {
 
   return (
     <div className="w-full pt-1">
-      <div className="flex gap-4">
+      <div className="flex flex-col lg:flex-row gap-4">
         <BoxWrapper>
           <MealItem
             icon={MdOutlineFreeBreakfast}
