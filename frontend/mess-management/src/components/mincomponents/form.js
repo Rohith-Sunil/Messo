@@ -51,7 +51,7 @@ function ContactForm() {
   };
 
   return (
-    <div className="max-h-screen bg-neutral-200 flex items-center justify-center p-10">
+    <div className="lg:max-h-screen bg-neutral-200 flex items-center justify-center p-10">
       <div className="max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg m-auto">
         <h2 className="text-3xl font-bold text-white mb-6">
           Complaints & Suggestions

@@ -494,7 +494,7 @@ export default function HRreview() {
         <p className="text-4xl font-bold underline decoration-gray-500 underline-offset-4 text-gray-900 px-2 m-2">
           Hostel Representatives Review
         </p>
-        <div className="flex flex-row gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
+        <div className="flex flex-col sm:flex-row gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
           {hrData.map((hr) => (
             <ProfileCard
               key={hr.name}
@@ -512,7 +512,7 @@ export default function HRreview() {
           <p className="text-4xl font-bold underline decoration-gray-500 underline-offset-4 text-gray-900 px-2 m-2">
             Admin Section
           </p>
-          <div className="grid grid-cols-3 gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
+          <div className="grid grid-col-2 sm:grid-cols-3 gap-5 m-4 p-10 bg-white shadow-md rounded-lg">
             {hrData.map((hr) => (
               <button
                 key={hr.name}

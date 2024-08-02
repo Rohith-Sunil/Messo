@@ -462,21 +462,22 @@ export default function AdminDashboard() {
 
   return (
     <div className="bg-neutral-100 w-full text-black min-h-screen text-center md:text-left overflow-auto">
-      <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full relative">
-        <button
-          className="absolute top-4 right-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mt-4"
-          onClick={() => setIsDialogOpen(true)}
-        >
-          Send Announcement
-        </button>
-
-        <div className="pb-8 mt-2">
-          <p className="text-4xl font-bold inline border-b-4 border-gray-500">
-            Admin Dashboard
-          </p>
+      <div className="max-w-screen-xl p-4 mx-auto flex flex-col justify-center w-full h-full sm:relative">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-8 mt-2">
+          <div className="pb-8 mt-2 mx-auto sm:mx-0">
+            <p className="text-4xl font-bold inline border-b-4 border-gray-500 ">
+              Admin Dashboard
+            </p>
+          </div>
+          <button
+            className="sm:absolute sm:top-4 sm:right-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none mt-4 mx-auto"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            Send Announcement
+          </button>
         </div>
 
-        <div className="pb-8 mt-4">
+        <div className="pb-8 mt-4 ">
           <h2 className="text-2xl font-semibold">Meal Ratings</h2>
           <div className="mt-4 overflow-auto">
             <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -571,7 +572,7 @@ export default function AdminDashboard() {
 
         {isDialogOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28">
+            <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28 mx-4">
               <button
                 onClick={() => setIsDialogOpen(false)}
                 className="absolute top-3 right-3 text-white text-3xl font-bold focus:outline-none"
