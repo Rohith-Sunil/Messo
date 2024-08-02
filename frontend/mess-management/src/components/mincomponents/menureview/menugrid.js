@@ -796,8 +796,8 @@ export default function MenuGrid() {
         </div>
       </div>
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 overflow-auto">
-          <div className="bg-white p-6 rounded-lg shadow-md relative w-full max-w-md mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 overflow-auto px-4">
+          <div className="bg-white p-6 rounded-lg shadow-md relative w-full max-w-md mx-aut0">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-center flex-grow">
                 Rate {meal_type} on {day}
