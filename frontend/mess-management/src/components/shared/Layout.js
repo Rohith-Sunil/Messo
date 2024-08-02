@@ -41,17 +41,17 @@ export default function Layout() {
   };
 
   // Check if the current route is the dashboard
-  const isDashboard = location.pathname === "/";
-  const isContact = location.pathname === "/complaints";
+  const isDashboard = location.pathname === "/app";
+  const isContact = location.pathname === "/app/complaints";
 
   return (
-    <div className="flex flex-col lg:flex-row bg-neutral-100 h-screen w-screen overflow-hidden">
+    <div className="flex flex-col lg:flex-row bg-neutral-100 h-screen w-screen overflow-auto">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex flex-col flex-1">
         <Header toggleSidebar={toggleSidebar} />
         <div
           className={`flex-1 ${
-            isDashboard || isContact ? "overflow-hidden" : "overflow-auto"
+            isDashboard || isContact ? "lg:overflow-hidden" : "lg:overflow-auto"
           }`}
         >
           <Outlet />
