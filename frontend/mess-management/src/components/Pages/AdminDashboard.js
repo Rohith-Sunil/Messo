@@ -572,7 +572,7 @@ export default function AdminDashboard() {
 
         {isDialogOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg mb-28 mx-4">
+            <div className="relative max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg sm:mb-44 mx-4 my-auto">
               <button
                 onClick={() => setIsDialogOpen(false)}
                 className="absolute top-3 right-3 text-white text-3xl font-bold focus:outline-none"
