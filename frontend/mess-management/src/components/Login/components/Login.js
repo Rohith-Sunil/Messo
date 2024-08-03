@@ -283,6 +283,79 @@
 //   );
 // }
 
+// import { useState } from "react";
+// import { loginFields } from "../constants/formFields";
+// import FormAction from "./FormAction";
+// import Input from "./Input";
+// import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../../../Auth/authProvider";
+// import { baseUrl } from "../../../helper";
+
+// const Login = () => {
+//   const [loginState, setLoginState] = useState(
+//     loginFields.reduce((acc, field) => ({ ...acc, [field.id]: "" }), {})
+//   );
+//   const navigate = useNavigate();
+//   const { setToken } = useAuth();
+
+//   const handleChange = (e) => {
+//     setLoginState({ ...loginState, [e.target.id]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const response = await fetch(`${baseUrl}/login`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(loginState),
+//       });
+
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! status: ${response.status}`);
+//       }
+
+//       const result = await response.json();
+
+//       if (result.success) {
+//         localStorage.setItem("name", result.foundUser.name);
+//         console.log(result.foundUser.ObjectID);
+//         setToken(result.token); // Set token which will also update isAdmin and isSuperAdmin
+//         navigate("/app"); // Navigate to home on success
+//       } else {
+//         console.error(result.message); // Handle failure
+//         navigate("/signup");
+//       }
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   };
+
+//   return (
+//     <form className="mt-8 space-y-6 px-4" onSubmit={handleSubmit}>
+//       {loginFields.map((field) => (
+//         <Input
+//           key={field.id}
+//           handleChange={handleChange}
+//           value={loginState[field.id]}
+//           labelText={field.labelText}
+//           labelFor={field.labelFor}
+//           id={field.id}
+//           name={field.name}
+//           type={field.type}
+//           isRequired={field.isRequired}
+//           placeholder={field.placeholder}
+//         />
+//       ))}
+//       <FormAction handleSubmit={handleSubmit} text="Login" />
+//     </form>
+//   );
+// };
+
+// export default Login;
+
 import { useState } from "react";
 import { loginFields } from "../constants/formFields";
 import FormAction from "./FormAction";
@@ -295,11 +368,13 @@ const Login = () => {
   const [loginState, setLoginState] = useState(
     loginFields.reduce((acc, field) => ({ ...acc, [field.id]: "" }), {})
   );
+  const [error, setError] = useState(""); // Add state to track error messages
   const navigate = useNavigate();
   const { setToken } = useAuth();
 
   const handleChange = (e) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
+    setError(""); // Reset error message on input change
   };
 
   const handleSubmit = async (e) => {
@@ -325,16 +400,18 @@ const Login = () => {
         setToken(result.token); // Set token which will also update isAdmin and isSuperAdmin
         navigate("/app"); // Navigate to home on success
       } else {
-        console.error(result.message); // Handle failure
-        navigate("/signup");
+        console.error(result.message); // Log error
+        setError("Invalid username or password."); // Set error message for UI
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error.message);
+      setError("Failed to log in. Please try again."); // Set more general error message for UI
     }
   };
 
   return (
     <form className="mt-8 space-y-6 px-4" onSubmit={handleSubmit}>
+      {/* Display error message */}
       {loginFields.map((field) => (
         <Input
           key={field.id}
@@ -349,6 +426,7 @@ const Login = () => {
           placeholder={field.placeholder}
         />
       ))}
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}{" "}
       <FormAction handleSubmit={handleSubmit} text="Login" />
     </form>
   );
