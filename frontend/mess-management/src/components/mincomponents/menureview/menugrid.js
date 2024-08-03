@@ -687,7 +687,6 @@ export default function MenuGrid() {
                         <div
                           key={id}
                           className="shadow-md shadow-gray-600 rounded-lg overflow-hidden bg-neutral-800 mb-4 cursor-pointer"
-                          onClick={() => handleRateClick(day, meal)}
                         >
                           <img
                             src={src}
@@ -757,7 +756,6 @@ export default function MenuGrid() {
                             <div
                               key={id}
                               className="shadow-md shadow-gray-600 rounded-lg bg-neutral-800 mb-4 cursor-pointer"
-                              onClick={() => handleRateClick(day, meal)}
                             >
                               <img
                                 src={src}
