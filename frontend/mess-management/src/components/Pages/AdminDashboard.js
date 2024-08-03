@@ -516,9 +516,21 @@ export default function AdminDashboard() {
                   key={complaint._id}
                   className="mb-6 p-4 border rounded-lg shadow-md bg-white"
                 >
-                  <h2 className="text-xl font-semibold mb-2">
+                  {/* <h2 className="text-xl font-semibold mb-2">
                     {complaint.subject}
                   </h2>
+                  <p className="mb-2">{complaint.message}</p>
+                  <p className="text-sm text-gray-600">
+                    Sent from: {complaint.email}
+                  </p> */}
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-xl font-semibold">
+                      {complaint.subject}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      Sent from: {complaint.email}
+                    </p>
+                  </div>
                   <p className="mb-2">{complaint.message}</p>
                   <div className="mt-4">
                     <label className="mr-2">Status:</label>

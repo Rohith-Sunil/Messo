@@ -13,7 +13,8 @@ import LandingPage from "./components/Pages/LandingPage";
 import LoginPage from "./components/Login/pages/Login";
 import SignupPage from "./components/Login/pages/Signup";
 import NoAccess from "./components/Pages/NoAccess";
-import AdminProtectedRoute from "./Auth/adminProtect";
+// import AdminProtectedRoute from "./Auth/adminProtect";
+import UserProfilePage from "./components/Pages/YourProfile";
 
 const RoutesConfig = () => {
   const { token } = useAuth();
@@ -62,6 +63,7 @@ const RoutesConfig = () => {
         <Route path="announcement" element={<Announcement />} />
         <Route path="admin" element={<AdminDashboard />} />
         <Route path="hrReview" element={<HRreview />} />
+        <Route path="profile" element={<UserProfilePage />} />
       </Route>
     </Route>
   );

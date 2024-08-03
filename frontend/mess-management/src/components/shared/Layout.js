@@ -51,7 +51,9 @@ export default function Layout() {
         <Header toggleSidebar={toggleSidebar} />
         <div
           className={`flex-1 ${
-            isDashboard || isContact ? "lg:overflow-hidden" : "lg:overflow-auto"
+            isDashboard || isContact
+              ? "2xl:overflow-hidden"
+              : "2xl:overflow-auto"
           }`}
         >
           <Outlet />
