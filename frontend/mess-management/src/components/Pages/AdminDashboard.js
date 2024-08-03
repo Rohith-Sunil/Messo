@@ -523,7 +523,7 @@ export default function AdminDashboard() {
                   <p className="text-sm text-gray-600">
                     Sent from: {complaint.email}
                   </p> */}
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex sm:flex-row flex-col justify-between items-center mb-2">
                     <h2 className="text-xl font-semibold">
                       {complaint.subject}
                     </h2>
