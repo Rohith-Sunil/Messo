@@ -451,6 +451,37 @@ export default function AdminDashboard() {
       console.error("Error updating status:", error);
     }
   };
+
+  //extra
+  const handleDownloadExcel = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/api/v1/exportComplaints`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to download the Excel file");
+      }
+
+      // Convert the response to a Blob
+      const blob = await response.blob();
+
+      // Create a link element and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "complaints.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading the Excel file:", error);
+    }
+  };
+
   console.log(complaints);
   const currentComplaints = complaints.slice(
     currentPage * itemsPerPage - itemsPerPage,
@@ -508,7 +539,17 @@ export default function AdminDashboard() {
         </div>
 
         <div className="pb-8 mt-4">
-          <h2 className="text-2xl font-semibold">Complaints & Suggestions</h2>
+          {/* <h2 className="text-2xl font-semibold">Complaints & Suggestions</h2> */}
+          <div className="flex items-center justify-between sm:flex-row flex-col gap-4">
+            <h2 className="text-2xl font-semibold">Complaints & Suggestions</h2>
+            <button
+              className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 focus:outline-none"
+              onClick={handleDownloadExcel}
+            >
+              Download Excel Sheet
+            </button>
+          </div>
+
           <div className="mt-4">
             {currentComplaints.length > 0 ? (
               currentComplaints.map((complaint) => (
