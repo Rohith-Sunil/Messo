@@ -276,6 +276,100 @@
 
 // export default AuthProvider;
 
+// import { createContext, useContext, useEffect, useMemo, useState } from "react";
+// import { jwtDecode } from "jwt-decode"; // Correct import statement
+
+// const AuthContext = createContext();
+
+// const AuthProvider = ({ children }) => {
+//   const [token, setToken_] = useState(
+//     () => localStorage.getItem("token") || null
+//   );
+//   const [isAdmin, setIsAdmin] = useState(false);
+//   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+//   const [userDetails, setUserDetails] = useState({});
+
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     if (token) {
+//       const decoded = jwtDecode(token);
+//       setIsAdmin(decoded.isAdmin || false);
+//       setIsSuperAdmin(decoded.isSuperAdmin || false);
+//       setUserDetails({
+//         email: decoded.email,
+//         ObjectID: decoded.ObjectID,
+//         name: decoded.name,
+//         hostelname: decoded.hostelname,
+//       });
+
+//       // Calculate the remaining time until token expiration
+//       const currentTime = Date.now() / 1000; // Convert to seconds
+//       const remainingTime = decoded.exp - currentTime;
+
+//       if (remainingTime > 0) {
+//         // Set a timeout to log out the user when the token expires
+//         const timer = setTimeout(() => {
+//           logout();
+//         }, remainingTime * 1000); // Convert seconds to milliseconds
+
+//         return () => clearTimeout(timer); // Clear timeout if token changes
+//       } else {
+//         // Token has already expired, log out immediately
+//         logout();
+//       }
+//     }
+//   }, [token]);
+
+//   const setToken = (newToken) => {
+//     localStorage.setItem("token", newToken);
+//     setToken_(newToken);
+//     const decoded = jwtDecode(newToken);
+//     setIsAdmin(decoded.isAdmin || false);
+//     setIsSuperAdmin(decoded.isSuperAdmin || false);
+//     setUserDetails({
+//       email: decoded.email,
+//       ObjectID: decoded.ObjectID,
+//       name: decoded.name,
+//       hostelname: decoded.hostelname,
+//     });
+//   };
+
+//   const logout = () => {
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("name");
+//     setToken_(null);
+//     setIsAdmin(false);
+//     setIsSuperAdmin(false);
+//     setUserDetails({});
+//     window.location.href = "/"; // Redirect to homepage or login
+//   };
+
+//   const contextValue = useMemo(
+//     () => ({
+//       token,
+//       isAdmin,
+//       isSuperAdmin,
+//       userDetails,
+//       setToken,
+//       logout,
+//     }),
+//     [token, isAdmin, isSuperAdmin, userDetails]
+//   );
+
+//   return (
+//     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+//   );
+// };
+
+// export const useAuth = () => {
+//   const context = useContext(AuthContext);
+//   if (context === undefined) {
+//     throw new Error("useAuth must be used within an AuthProvider");
+//   }
+//   return context;
+// };
+
+// export default AuthProvider;
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { jwtDecode } from "jwt-decode"; // Correct import statement
 
@@ -283,14 +377,14 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [token, setToken_] = useState(
-    () => localStorage.getItem("token") || null
+    () => sessionStorage.getItem("token") || null
   );
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode(token);
       setIsAdmin(decoded.isAdmin || false);
@@ -321,7 +415,7 @@ const AuthProvider = ({ children }) => {
   }, [token]);
 
   const setToken = (newToken) => {
-    localStorage.setItem("token", newToken);
+    sessionStorage.setItem("token", newToken);
     setToken_(newToken);
     const decoded = jwtDecode(newToken);
     setIsAdmin(decoded.isAdmin || false);
@@ -335,8 +429,8 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("name");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("name");
     setToken_(null);
     setIsAdmin(false);
     setIsSuperAdmin(false);

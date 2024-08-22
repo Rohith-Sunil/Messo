@@ -395,7 +395,7 @@ const Login = () => {
       const result = await response.json();
 
       if (result.success) {
-        localStorage.setItem("name", result.foundUser.name);
+        // localStorage.setItem("name", result.foundUser.name);
         console.log(result.foundUser.ObjectID);
         setToken(result.token); // Set token which will also update isAdmin and isSuperAdmin
         navigate("/app"); // Navigate to home on success
