@@ -42,7 +42,7 @@
 //   );
 // }
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DashboardStatsgrid from "../mincomponents/dashboard/DashboardStatsgrid";
 import PopularDays from "../mincomponents/dashboard/PopularFood";
 import LatestAnnouncement from "../mincomponents/dashboard/LatestAnnouncement";
@@ -51,7 +51,21 @@ import { useAuth } from "../../Auth/authProvider"; // Adjust the import path to 
 export default function Dashboard() {
   const { userDetails } = useAuth();
   const hostelname = userDetails?.hostelname; // Assuming userDetails contains a property hostelname
-  const menuImagePath = require(`../mincomponents/dashboard/img/${hostelname}.png`);
+  // const menuImagePath = require(`../mincomponents/dashboard/img/${hostelname}.png`);
+  const [menuImagePath, setMenuImagePath] = useState(null);
+
+  useEffect(() => {
+    if (hostelname) {
+      import(`../mincomponents/dashboard/img/${hostelname}.png`)
+        .then((image) => {
+          setMenuImagePath(image.default);
+        })
+        .catch((err) => {
+          console.error("Error loading image:", err);
+          setMenuImagePath(null); // Set a fallback or null if the image doesn't exist
+        });
+    }
+  }, [hostelname]);
 
   return (
     <div className="flex flex-col h-screen lg:overflow-hidden">
@@ -65,12 +79,24 @@ export default function Dashboard() {
           <div className="flex lg:flex-row lg:overflow-hidden p-2 gap-4 flex-col mb-2 lg:mb-0">
             <div className="w-full lg:w-2/3 flex items-center justify-center mt-4 max-h-[29rem]">
               <div className="bg-white shadow-md rounded-lg h-full p-4 w-full">
-                <h2 className="text-xl font-bold mb-4">Hostel Menu</h2>
+                {/* <h2 className="text-xl font-bold mb-4">Hostel Menu</h2>
                 <img
                   src={menuImagePath}
                   alt="Hostel Menu"
                   className="rounded-lg w-full h-auto max-h-96 object-contain"
-                />
+                /> */}
+                <h2 className="text-xl font-bold mb-4">Hostel Menu</h2>
+                {menuImagePath ? (
+                  <img
+                    src={menuImagePath}
+                    alt="Hostel Menu"
+                    className="rounded-lg w-full h-auto max-h-96 object-contain"
+                  />
+                ) : (
+                  <div className="text-center text-gray-500">
+                    Loading menu image...
+                  </div>
+                )}
               </div>
             </div>
             <div className="lg:w-1/3 w-full flex flex-col gap-4 mt-4 max-h-[39rem] lg:mb-0">

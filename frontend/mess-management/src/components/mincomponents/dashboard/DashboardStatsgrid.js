@@ -126,7 +126,7 @@
 //   );
 // }
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../Auth/authProvider"; // Adjust the import according to your project structure
 import {
   MdOutlineFreeBreakfast,
@@ -149,8 +149,33 @@ const currentDay = daysOfWeek[new Date().getDay()];
 
 export default function DashboardStatsgrid() {
   const { userDetails } = useAuth();
-  const selectedHostel = userDetails.hostelname;
-  const todayMenu = menuData[selectedHostel][currentDay];
+  // const selectedHostel = userDetails.hostelname;
+  // const todayMenu = menuData[selectedHostel][currentDay];
+  const [todayMenu, setTodayMenu] = useState(null);
+
+  useEffect(() => {
+    if (userDetails) {
+      const selectedHostel = userDetails.hostelname;
+      const menu = menuData[selectedHostel]?.[currentDay];
+      setTodayMenu(menu);
+    }
+  }, [userDetails]);
+
+  if (!userDetails) {
+    return (
+      <div className="w-full pt-1 text-center text-gray-500">
+        Loading user data...
+      </div>
+    );
+  }
+
+  if (!todayMenu) {
+    return (
+      <div className="w-full pt-1 text-center text-gray-500">
+        Menu data not available for today or selected hostel.
+      </div>
+    );
+  }
 
   return (
     <div className="w-full pt-1">
