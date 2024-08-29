@@ -52,8 +52,6 @@ const RoutesConfig = () => {
   //   </>
   // );
 
-  // Define routes accessible only to authenticated users
-  // Define routes accessible only to authenticated users
   const AuthenticatedRoutes = (
     <Route path="/app" element={<ProtectedRoute />}>
       <Route path="" element={<Layout />}>

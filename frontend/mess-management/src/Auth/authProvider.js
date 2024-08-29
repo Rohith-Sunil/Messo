@@ -371,7 +371,7 @@
 
 // export default AuthProvider;
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { jwtDecode } from "jwt-decode"; // Correct import statement
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -396,19 +396,16 @@ const AuthProvider = ({ children }) => {
         hostelname: decoded.hostelname,
       });
 
-      // Calculate the remaining time until token expiration
-      const currentTime = Date.now() / 1000; // Convert to seconds
+      const currentTime = Date.now() / 1000;
       const remainingTime = decoded.exp - currentTime;
 
       if (remainingTime > 0) {
-        // Set a timeout to log out the user when the token expires
         const timer = setTimeout(() => {
           logout();
-        }, remainingTime * 1000); // Convert seconds to milliseconds
+        }, remainingTime * 1000);
 
-        return () => clearTimeout(timer); // Clear timeout if token changes
+        return () => clearTimeout(timer);
       } else {
-        // Token has already expired, log out immediately
         logout();
       }
     }

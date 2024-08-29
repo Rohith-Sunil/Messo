@@ -1,34 +1,86 @@
 const Complaint = require("../models/complaints");
 const ExcelJS = require("exceljs");
+const cloudinary = require("cloudinary").v2;
+
+// const complaintsController = async (req, res) => {
+//   const { email, hostel_name, subject, messageType, message } = req.body;
+
+//   if (!email) {
+//     return res.status(422).json({ error: "Email is required" });
+//   }
+//   if (!hostel_name) {
+//     return res.status(422).json({ error: "Hostel Name is required" });
+//   }
+//   if (!subject) {
+//     return res.status(422).json({ error: "Subject is required" });
+//   }
+//   if (!messageType) {
+//     return res.status(422).json({ error: "Message Type is required" });
+//   }
+//   if (!message) {
+//     return res.status(422).json({ error: "Message is required" });
+//   }
+
+//   const newComplaint = new Complaint({
+//     email,
+//     hostel_name,
+//     subject,
+//     messageType,
+//     message,
+//   });
+//   await newComplaint.save();
+//   res.status(201).json(newComplaint);
+// };
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const complaintsController = async (req, res) => {
-  const { email, hostel_name, subject, messageType, message } = req.body;
+  try {
+    const { email, hostel_name, subject, messageType, message } = req.body;
+    // console.log("Request body:", req.body);
+    // console.log("Uploaded file:", req.file); // Log to check if the file is uploaded
 
-  if (!email) {
-    return res.status(422).json({ error: "Email is required" });
-  }
-  if (!hostel_name) {
-    return res.status(422).json({ error: "Hostel Name is required" });
-  }
-  if (!subject) {
-    return res.status(422).json({ error: "Subject is required" });
-  }
-  if (!messageType) {
-    return res.status(422).json({ error: "Message Type is required" });
-  }
-  if (!message) {
-    return res.status(422).json({ error: "Message is required" });
-  }
+    // Validate required fields
+    if (!email) return res.status(422).json({ error: "Email is required" });
+    if (!hostel_name)
+      return res.status(422).json({ error: "Hostel Name is required" });
+    if (!subject) return res.status(422).json({ error: "Subject is required" });
+    if (!messageType)
+      return res.status(422).json({ error: "Message Type is required" });
+    if (!message) return res.status(422).json({ error: "Message is required" });
 
-  const newComplaint = new Complaint({
-    email,
-    hostel_name,
-    subject,
-    messageType,
-    message,
-  });
-  await newComplaint.save();
-  res.status(201).json(newComplaint);
+    let imageUrl = null;
+    let imageId = null;
+
+    // Retrieve the Cloudinary URL and ID from req.file
+    if (req.file) {
+      imageUrl = req.file.path; // Cloudinary URL
+      imageId = req.file.filename; // Cloudinary public ID
+      // console.log("Image URL:", imageUrl); // Log to confirm
+      // console.log("Image ID:", imageId); // Log to confirm
+    }
+
+    // Create and save the new complaint
+    const newComplaint = new Complaint({
+      email,
+      hostel_name,
+      subject,
+      messageType,
+      message,
+      imageUrl,
+      imageId,
+    });
+
+    await newComplaint.save();
+    res.status(201).json(newComplaint);
+  } catch (error) {
+    console.error("Error saving complaint:", error);
+    res.status(500).json({ error: "Error saving complaint" });
+  }
 };
 
 const updateComplaintStatus = async (req, res) => {

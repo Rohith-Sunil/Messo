@@ -339,6 +339,7 @@ export default function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const { token, userDetails } = useAuth();
+  const [visibleImages, setVisibleImages] = useState({});
 
   useEffect(() => {
     async function fetchData() {
@@ -453,6 +454,12 @@ export default function AdminDashboard() {
   };
 
   //extra
+  const toggleImageVisibility = (id) => {
+    setVisibleImages((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
   const handleDownloadExcel = async () => {
     try {
       const response = await fetch(`${baseUrl}/api/v1/exportComplaints`, {
@@ -573,6 +580,27 @@ export default function AdminDashboard() {
                     </p>
                   </div>
                   <p className="mb-2">{complaint.message}</p>
+                  {complaint.imageUrl && (
+                    <button
+                      onClick={() => toggleImageVisibility(complaint._id)}
+                      className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                    >
+                      {visibleImages[complaint._id]
+                        ? "Hide Image"
+                        : "Show Image"}
+                    </button>
+                  )}
+
+                  {visibleImages[complaint._id] && complaint.imageUrl && (
+                    <div className="mt-4">
+                      <img
+                        src={complaint.imageUrl}
+                        alt="Complaint related"
+                        className="max-w-full h-auto rounded-lg shadow-md"
+                        style={{ maxWidth: "500px", maxHeight: "400px" }} // Set max size
+                      />
+                    </div>
+                  )}
                   <div className="mt-4">
                     <label className="mr-2">Status:</label>
                     <select

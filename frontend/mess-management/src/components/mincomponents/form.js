@@ -7,6 +7,11 @@ function ContactForm() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const { userDetails } = useAuth();
+  //extra
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const hostel_name = userDetails.hostelname;
   const email = userDetails.email;
@@ -18,21 +23,31 @@ function ContactForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      email: email,
-      hostel_name: hostel_name,
-      subject: subject,
-      messageType: messageType,
-      message: message,
-    };
+    // const data = {
+    //   email: email,
+    //   hostel_name: hostel_name,
+    //   subject: subject,
+    //   messageType: messageType,
+    //   message: message,
+    // };
+    const data = new FormData(); // Using FormData to handle both text and file inputs
+    data.append("email", email);
+    data.append("hostel_name", hostel_name);
+    data.append("subject", subject);
+    data.append("messageType", messageType);
+    data.append("message", message);
+    if (file) {
+      data.append("file", file); // Append the file if one is selected
+    }
 
     try {
       const response = await fetch(`${baseUrl}/api/v1/sendComplaint`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
+        // body: JSON.stringify(data),
+        body: data,
       });
 
       if (response.ok) {
@@ -47,11 +62,13 @@ function ContactForm() {
     }
     setMessage("");
     setSubject("");
+    setFile(null);
     // setEmail("");
+    e.target.reset();
   };
 
   return (
-    <div className="lg:max-h-screen bg-neutral-200 flex items-center justify-center p-10">
+    <div className="lg:max-h-screen bg-neutral-200 flex items-center justify-center p-5">
       <div className="max-w-2xl w-full bg-neutral-900 p-10 rounded-lg shadow-lg m-auto">
         <h2 className="text-3xl font-bold text-white mb-6">
           Complaints & Suggestions
@@ -136,6 +153,17 @@ function ContactForm() {
               className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
               placeholder="Leave a comment..."
             ></textarea>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="file" className="block text-gray-400">
+              Upload an image (optional)
+            </label>
+            <input
+              type="file"
+              id="file"
+              onChange={handleFileChange}
+              className="w-full mt-2 p-3 bg-gray-700 rounded text-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
           </div>
           <button
             type="submit"
