@@ -35,8 +35,6 @@
 // const Complaint = mongoose.model("Complaint", complaintSchema);
 // module.exports = Complaint;
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const Signup = require("./signup");
 
 const complaintSchema = new mongoose.Schema({
   email: {
