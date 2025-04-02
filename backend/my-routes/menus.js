@@ -26,7 +26,6 @@ router.get("/ratingByDayAndMealType", verifyToken, async (req, res) => {
     const cachedData = await redisHelper.get(cacheKey);
 
     if (cachedData) {
-      console.log("Serving from cache:", cachedData);
       return res.json(cachedData);
     }
 
