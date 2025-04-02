@@ -55,7 +55,7 @@ const refreshTokenSecret = process.env.SECRET_KEY;
 let refreshTokens = [];
 
 mongoose
-  .connect("mongodb+srv://messo:1234@messo.gmb5mku.mongodb.net/", {
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
