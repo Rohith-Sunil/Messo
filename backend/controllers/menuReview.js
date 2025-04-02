@@ -86,4 +86,35 @@ const getUserRatings = async (req, res) => {
   }
 };
 
-module.exports = { createReview, getUserRatings };
+const getRatingByDayAndMealType = async (req, res) => {
+  try {
+    const { hostelName } = req.query;
+    if (!hostelName) {
+      return res.status(400).json({ error: "Hostel name is required" });
+    }
+
+    const ratingByDayAndMealType = await menuModel.aggregate([
+      {
+        $match: {
+          hostel_name: hostelName,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: "$day",
+            meal_type: "$meal_type",
+          },
+          averageRating: { $avg: "$rating" },
+        },
+      },
+    ]);
+
+    res.json(ratingByDayAndMealType);
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    res.status(500).json({ error: "Error fetching ratings" });
+  }
+};
+
+module.exports = { createReview, getUserRatings, getRatingByDayAndMealType };

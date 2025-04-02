@@ -1,128 +1,3 @@
-// const express = require("express");
-// const app = express();
-// const mongoose = require("mongoose");
-// const bodyParser = require("body-parser");
-// const bcrypt = require("bcryptjs");
-// const cors = require("cors");
-// const newUser = require("./models/signup");
-// const logins = require("./models/login");
-// const session = require("express-session");
-
-// const port = 5000;
-// const sessionOptions = {
-//   secret: "thisisnotsecret",
-//   resave: false,
-//   saveUninitialized: false,
-// };
-// const flash = require("connect-flash");
-// const HR_route = require("./my-routes/HR_route");
-// const menus = require("./my-routes/menus");
-// const announce_route = require("./my-routes/announce_route");
-// const complaints_route = require("./my-routes/complaint_route");
-// mongoose
-//   .connect("mongodb+srv://messo:1234@messo.gmb5mku.mongodb.net/", {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => console.log("Connected to MongoDB"))
-//   .catch((err) => console.log(err));
-
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cors());
-// app.use(session(sessionOptions));
-// app.use(flash());
-// app.use((req, res, next) => {
-//   res.locals.message = req.flash();
-//   next();
-// });
-// app.use("/api/v1", HR_route);
-// app.use("/api/v1", complaints_route);
-// app.use("/api/v1", menus);
-// app.use("/api/v1", announce_route);
-// const requireLogin = (req, res, next) => {
-//   if (!req.session.user_id) {
-//     return res.redirect("/login");
-//   }
-//   next();
-// };
-
-// // app.get("/", (req, res) => {
-// //   res.send("Home page");
-// //   console.log("Welcome to home page");
-// // });
-
-// app.post("/login", async (req, res) => {
-//   const { email, password } = req.body;
-//   const foundUser = await newUser.findAndValidate(email, password);
-//   if (!email || !password) {
-//     res.json("please provide email and password");
-//   }
-//   if (!foundUser) res.json("invalid credentials");
-
-//   console.log(foundUser);
-//   if (foundUser) {
-//     req.flash("info", "Login successful");
-//     console.log("Login successful");
-
-//     const token = foundUser.createJWT();
-//     res.json({
-//       success: true,
-//       message: "loggedin",
-//       foundUser: {
-//         email: foundUser.email,
-//         isAdmin: foundUser.isAdmin,
-//       },
-//       name: foundUser.name,
-//       token,
-//     });
-//     // res.json({ status: "exist", message: "Login successful" });
-//     // req.session.user_id = foundUser._id;
-//   } else {
-//     // req.flash("failed", "Login failed");
-//     // res.json({ status: "notexist", message: "Login failed" });
-//   }
-// });
-
-// app.post("/register", async (req, res) => {
-//   const { name, hostel_name, email, password, confirm_password } = req.body;
-//   const users = await newUser.find({ email });
-//   if (users) {
-//     console.log("Already registered");
-//   }
-//   const user = new newUser({
-//     name,
-//     hostel_name,
-//     email,
-//     password,
-//     confirm_password,
-//   });
-//   console.log(user);
-//   await user.save();
-
-//   const token = user.createJWT();
-//   res.status(200).json({
-//     success: true,
-//     message: "User updated successfully",
-//     user: {
-//       email: user.email,
-//       name: user.name,
-//     },
-//     token,
-//   });
-//   // req.session.user_id = user._id;
-//   console.log("Hey User");
-//   // res.redirect("/");
-// });
-
-// app.post("/logout", (req, res, next) => {
-//   req.session.user_id = null;
-//   res.redirect("/login");
-// });
-
-// app.listen(5000, () => {
-//   console.log(`Server started at port ${port}...`);
-// });
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -132,14 +7,42 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const newUser = require("./models/signup");
+const logins = require("./models/login");
 const session = require("express-session");
+const RedisStore = require("connect-redis").default;
+const { redisClient } = require("./config/redis");
 const verifyToken = require("../backend/middleware/verifyToken");
 const port = process.env.PORT || 5000;
+
+// Redis session store configuration
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "messo:sess:",
+});
+
 const sessionOptions = {
-  secret: process.env.SECRET_KEY,
+  secret: process.env.SECRET_KEY || "thisisnotsecret",
   resave: false,
   saveUninitialized: false,
+  store: redisStore,
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  },
 };
+
+// Only use Redis store if Redis is available
+if (redisClient.isOpen) {
+  sessionOptions.store = new RedisStore({
+    client: redisClient,
+    prefix: "messo:sess:",
+  });
+  console.log("Using Redis for session storage");
+} else {
+  console.log("Redis not available, using memory store for sessions");
+}
+
 const flash = require("connect-flash");
 const HR_route = require("./my-routes/HR_route");
 const menus = require("./my-routes/menus");
@@ -267,6 +170,36 @@ app.post("/logout", verifyToken, (req, res) => {
   req.session.user_id = null;
   res.json({ message: "Logged out successfully" });
 });
+
+// Add Redis-based caching middleware
+const cacheMiddleware = (duration) => {
+  return async (req, res, next) => {
+    if (req.method !== "GET") {
+      return next();
+    }
+
+    const key = `cache:${req.originalUrl}`;
+    try {
+      const cachedResponse = await redisClient.get(key);
+      if (cachedResponse) {
+        return res.json(JSON.parse(cachedResponse));
+      }
+      res.originalJson = res.json;
+      res.json = (body) => {
+        redisClient.setEx(key, duration, JSON.stringify(body));
+        res.originalJson(body);
+      };
+      next();
+    } catch (error) {
+      console.error("Cache Error:", error);
+      next();
+    }
+  };
+};
+
+// Apply caching to specific routes
+app.use("/api/v1/menus", cacheMiddleware(300)); // Cache menu data for 5 minutes
+app.use("/api/v1/announcements", cacheMiddleware(60)); // Cache announcements for 1 minute
 
 app.listen(port, () => {
   console.log(`Server started at port ${port}...`);
